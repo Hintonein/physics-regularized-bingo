@@ -28,30 +28,29 @@ from bingo.stats.pareto_front import ParetoFront
 
 POP_SIZE = 50
 STACK_SIZE = 10
-MAX_GENERATIONS = 25
+MAX_GENERATIONS = 100
 FITNESS_THRESHOLD = 1e-6
 STAGNATION_THRESHOLD = 100
 CHECK_FREQUENCY = 1
 MIN_GENERATIONS = 1
 
 
-def constant_ode(x, c):
-    return c
+def format_training_data(bcs, n):
+    x_bcs = np.asarray(
+        bcs[0], dtype=np.float64).reshape((-1, 1))
+    u_bcs = np.asarray(bcs[1], dtype=np.float64).reshape((-1, 1))
 
+    x_df = np.linspace(
+        bcs[0][0], bcs[0][1], n).reshape((-1, 1))[1:-1]
 
-def linear_ode(x, m, b):
-    return m * x + b
-
-
-def trig_ode(x):
-    return np.cos(x)
+    return x_bcs, u_bcs, x_df
 
 
 def agraph_similarity(ag_1, ag_2):
     return ag_1.fitness == ag_2.fitness and ag_1.get_complexity() == ag_2.get_complexity()
 
 
-def solve_ode_gpsr(odefun, bcs, n, persistent=False):
+def solve_diffeq_gpsr(X, U, X_df, error_df_fn, df_order=1):
     # evolve the population
 
     communicator = MPI.COMM_WORLD
@@ -61,16 +60,15 @@ def solve_ode_gpsr(odefun, bcs, n, persistent=False):
     if rank == 0:
         # these are unused values, but required by the current bingo
         # implementation.  set to arbitrary empty values
-        x_discr = np.linspace(bcs[0][0], bcs[0][1], n)
-        y_vals = np.empty_like(x_discr)
-        dummy = np.empty([len(x_discr), 2], dtype=float)
-        dummy[:, 0] = x_discr
-        dummy[:, 1] = y_vals
+        x_discr = np.vstack([X, X_df])
+        y_vals = np.empty((x_discr.shape[0], 1))
+        dummy = np.hstack([x_discr, y_vals])
 
+    # TODO: Update for MPI, need to broadcase X,U,X_df
     dummy = MPI.COMM_WORLD.bcast(dummy, root=0)
 
     # not used
-    training_data = ImplicitTrainingData(dummy)
+    dummy_training_data = ImplicitTrainingData(dummy)
 
     # tell bingo which mathematical building blocks may be used
     component_generator = ComponentGenerator(1)
@@ -86,7 +84,8 @@ def solve_ode_gpsr(odefun, bcs, n, persistent=False):
     agraph_generator = AGraphGenerator(STACK_SIZE, component_generator)
 
     # tell bingo how fitness is defined
-    fitness = ImplicitRegression_TF(training_data, odefun, bcs, n, persistent)
+    fitness = ImplicitRegression_TF(
+        dummy_training_data, X, U, X_df, error_df_fn, df_order)
 
     # tell bingo how to calibrate any coefficients
     local_opt_fitness = ContinuousLocalOptimization(
@@ -184,9 +183,50 @@ def test_shm(omega):
 
         return (omega**2 * u)
 
-    bcs = ((0, 0.75), (np.sin(0), np.sin(0.75*omega)))
+    bcs = ((0, 2*np.pi), (np.sin(0), np.sin(2*np.pi*omega)))
 
     return odefun, bcs
+
+
+def test_transport(v, n_x, n_t):
+    ''' 1D transport equation with initial condion sin(x), periodic boundary condition'''
+
+    def pdefun(X, U, g):
+        U_1 = g.gradient(U, X)
+
+        if U_1 is not None:
+
+            u_x = U_1[:, 0]
+            u_t = U_1[:, 1]
+
+            return (u_t + v * u_x)
+        else:
+            return tf.zeros_like(U)
+
+    def solution_true(X):
+        return np.sin(X[:, 0] - X[:, 1]*v).reshape((X.shape[0], 1))
+
+    X_init_x = np.linspace(0, 2*np.pi, n_x).reshape((n_x, 1))
+    X_init = np.hstack([X_init_x, np.zeros((n_x, 1))])
+
+    X_min_x = np.zeros((n_t, 1))
+    X_min_t = np.linspace(0, 1, n_t).reshape((n_t, 1))
+    X_min = np.hstack([X_min_x, X_min_t])
+
+    X_max_x = np.ones((n_t, 1)) * 2 * np.pi
+    X_max_t = np.linspace(0, 1, n_t).reshape((n_t, 1))
+    X_max = np.hstack([X_max_x, X_max_t])
+
+    X_boundary = np.vstack([X_init, X_min, X_max])
+    U_boundary = solution_true(X_boundary)
+
+    X_df = np.empty((n_x*n_t, 2))
+    for i, x in enumerate(np.linspace(0, 2*np.pi, n_x)):
+        for j, t in enumerate(np.linspace(0, 1, n_t)):
+            idx = i*n_t + j
+            X_df[idx, 0], X_df[idx, 1] = x, t
+
+    return X_boundary, U_boundary, X_df, pdefun
 
 
 def main():
@@ -221,11 +261,16 @@ def main():
     # plot_pareto_front(pareto_front, 'pareto_trig_exp')
     # #plot_data_and_model(bcs, agraph, 'soln_trig_ode')
 
-    print("Solving simple harmonic motion")
-    odefun, bcs = test_shm(2*np.pi)
-    agraph, pareto_front = solve_ode_gpsr(odefun, bcs, n, True)
-    plot_pareto_front(pareto_front, 'pareto_shm_ode')
+    # print("Solving simple harmonic motion")
+    # odefun, bcs = test_shm(1)
+    # X, U, X_df = format_training_data(bcs, n)
+    # agraph, pareto_front = solve_diffeq_gpsr(X, U, X_df, odefun, 2)
+    #plot_pareto_front(pareto_front, 'pareto_shm_ode')
     #plot_data_and_model(bcs, agraph, 'soln_trig_ode')
+
+    print("Solving the transport equation")
+    X, U, X_df, pdefun = test_transport(1, 20, 20)
+    agraph, pareto_front = solve_diffeq_gpsr(X, U, X_df, pdefun, 1)
 
 
 if __name__ == '__main__':
