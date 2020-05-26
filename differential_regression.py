@@ -2,20 +2,28 @@ import tensorflow as tf
 
 import numpy as np
 
-from bingo.symbolic_regression.implicit_regression import ImplicitRegression
+from bingo.evaluation.fitness_function import VectorBasedFunction
 
 
-class ImplicitRegression_TF(ImplicitRegression):
+class DifferentialRegression_TF(VectorBasedFunction):
 
-    def __init__(self, training_data, X, U, X_df, df_err, df_order=1):
+    def __init__(self,
+                 X, U, X_df, df_err,
+                 df_order=1,
+                 differential_weight=1,
+                 metric="mae",
+                 detect_const_solutions=True):
 
-        super().__init__(training_data)
+        super().__init__(None, metric)
 
         self.X = tf.convert_to_tensor(X, dtype=tf.float64)
-        self.U = U  # Keep a numpy array
+        self.U = U  # Keep as a numpy array
         self.X_df = tf.convert_to_tensor(X_df, dtype=tf.float64)
 
         self.persistent = df_order > 1
+
+        self.differential_weight = differential_weight
+        self.detect_const_solutions = detect_const_solutions
 
         self.df_err = df_err
 
@@ -95,6 +103,20 @@ class ImplicitRegression_TF(ImplicitRegression):
         # g is not cleaned up automatically if set it as persistent
         if self.persistent:
             del g
-        fitness = np.hstack([error_fit, error_df])
+
+        fitness = self._metric(error_fit) + \
+            self.differential_weight * self._metric(error_df)
+
+        if self.detect_const_solutions and not np.isinf(self._metric(error_df)):
+            random_idx = np.random.choice(list(range(U_df.shape[0])), 6)
+            U_df_npy = U_df.numpy()
+
+            vals = U_df_npy[random_idx]
+
+            residual = vals[0] - vals[1] + \
+                vals[2] - vals[3] + vals[4] - vals[5]
+
+            if np.abs(residual) < 1e-6:
+                fitness = np.inf
 
         return fitness

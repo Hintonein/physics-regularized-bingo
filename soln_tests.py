@@ -6,6 +6,7 @@ import numpy as np
 import math as m
 from mpi4py import MPI
 import tensorflow as tf
+import data.load
 
 from helper_funcs import *
 
@@ -14,10 +15,8 @@ from bingo.symbolic_regression.agraph.mutation import AGraphMutation
 from bingo.symbolic_regression.agraph.generator import AGraphGenerator
 from bingo.symbolic_regression.agraph.component_generator import ComponentGenerator
 
-from bingo.symbolic_regression.implicit_regression import ImplicitTrainingData
-
 # define custom fitness
-from differential_regression import ImplicitRegression_TF
+from differential_regression import DifferentialRegression_TF
 
 from bingo.evolutionary_algorithms.deterministic_crowding import DeterministicCrowdingEA
 from bingo.evolutionary_optimizers.parallel_archipelago import ParallelArchipelago
@@ -28,7 +27,7 @@ from bingo.stats.pareto_front import ParetoFront
 
 POP_SIZE = 50
 STACK_SIZE = 10
-MAX_GENERATIONS = 100
+MAX_GENERATIONS = 50
 FITNESS_THRESHOLD = 1e-6
 STAGNATION_THRESHOLD = 100
 CHECK_FREQUENCY = 1
@@ -67,11 +66,8 @@ def solve_diffeq_gpsr(X, U, X_df, error_df_fn, df_order=1):
     # TODO: Update for MPI, need to broadcase X,U,X_df
     dummy = MPI.COMM_WORLD.bcast(dummy, root=0)
 
-    # not used
-    dummy_training_data = ImplicitTrainingData(dummy)
-
     # tell bingo which mathematical building blocks may be used
-    component_generator = ComponentGenerator(1)
+    component_generator = ComponentGenerator(X.shape[1])
     component_generator.add_operator("+")
     component_generator.add_operator("-")
     component_generator.add_operator("*")
@@ -84,8 +80,8 @@ def solve_diffeq_gpsr(X, U, X_df, error_df_fn, df_order=1):
     agraph_generator = AGraphGenerator(STACK_SIZE, component_generator)
 
     # tell bingo how fitness is defined
-    fitness = ImplicitRegression_TF(
-        dummy_training_data, X, U, X_df, error_df_fn, df_order)
+    fitness = DifferentialRegression_TF(
+        X, U, X_df, error_df_fn, df_order, metric="rmse")
 
     # tell bingo how to calibrate any coefficients
     local_opt_fitness = ContinuousLocalOptimization(
@@ -162,7 +158,7 @@ def test_exp(k):
         if u_x is not None:
             return (u_x[:, 0] - u*k)
         else:
-            return (-u*k)
+            return tf.ones_like(u) * np.inf
 
     # bcs : ((xmin, xmax), (ymin, ymax))
     bcs = ((-1, 1), (np.exp(-1*k), np.exp(1*k)))
@@ -176,16 +172,64 @@ def test_shm(omega):
         u_x = g.gradient(u, x)
 
         if u_x is not None:
-            u_xx = g.gradient(u_x, x)
+            u_xx = g.gradient(u_x[:, 0], x)
 
             if u_xx is not None:
                 return (u_xx[:, 0] + omega**2 * u)
 
-        return (omega**2 * u)
+        return tf.ones_like(u) * np.inf  # Disallow constants
 
-    bcs = ((0, 2*np.pi), (np.sin(0), np.sin(2*np.pi*omega)))
+    X = np.array([0.05, 0.1])[:, None]
+    U = np.sin(omega * X)
+    X_df = np.linspace(0, 1, 128)[:, None]
 
-    return odefun, bcs
+    return X, U, X_df, odefun
+
+
+def test_shm_const(omega):
+
+    def odefun(x, u, g):
+        u_x = g.gradient(u, x)
+
+        if u_x is not None:
+            u_xx = g.gradient(u_x[:, 0], x)
+
+            if u_xx is not None:
+                return (u_xx[:, 0] + omega**2 * u)
+
+        return tf.ones_like(u) * np.inf
+
+    X = np.array([0.05, 0.1])[:, None]
+    U = np.sin(omega * X)
+    X_const = np.ones((2, 1)) * omega
+    X = np.hstack([X, X_const])
+    X_df = np.linspace(0, 1, 128)[:, None]
+    X_df_const = np.ones((128, 1)) * omega
+    X_df = np.hstack([X_df, X_df_const])
+
+    return X, U, X_df, odefun
+
+
+def test_shm_dense(omega):
+
+    def odefun(x, u, g):
+        u_x = g.gradient(u, x)
+
+        if u_x is not None:
+            u_xx = g.gradient(u_x[:, 0], x)
+
+            if u_xx is not None:
+                return (u_xx[:, 0] + omega**2 * u)
+
+        return tf.ones_like(u) * np.inf
+
+    X = np.linspace(0, 1, 128)[:, None]
+    U = np.sin(omega * X)
+    X = np.hstack([X, np.ones((128, 1))*omega])
+    X_df = np.linspace(0, 1, 1)[:, None]
+    X_df = np.hstack([X_df,  np.ones((1, 1))*omega])
+
+    return X, U, X_df, odefun
 
 
 def test_transport(v, n_x, n_t):
@@ -201,7 +245,7 @@ def test_transport(v, n_x, n_t):
 
             return (u_t + v * u_x)
         else:
-            return tf.zeros_like(U)
+            return tf.ones_like(U)*np.inf
 
     def solution_true(X):
         return np.sin(X[:, 0] - X[:, 1]*v).reshape((X.shape[0], 1))
@@ -227,6 +271,65 @@ def test_transport(v, n_x, n_t):
             X_df[idx, 0], X_df[idx, 1] = x, t
 
     return X_boundary, U_boundary, X_df, pdefun
+
+
+def test_burgers():
+
+    nu = 0.01 / np.pi
+
+    def pdefun(X, U, g):
+
+        U_1 = g.gradient(U, X)
+        if U_1 is not None:
+
+            u_x = U_1[:, 0]
+            u_t = U_1[:, 1]
+
+            U_xx = g.gradient(u_x, X)
+            if U_xx is not None:
+                u_xx = U_xx[:, 0]
+                return u_t + U*u_x - nu*u_xx
+
+        return tf.ones_like(U) * np.inf
+
+    X_true, U_true, X_bounds, U_bounds, _ = data.load.load_burgers_bounds()
+
+    X = np.vstack(X_bounds)
+    U = np.vstack(U_bounds)
+
+    X_df = np.random.uniform(low=[-1, 0], high=[1, 1], size=(5000, 2))
+
+    return X, U, X_df, pdefun
+
+
+def test_burgers_dense(n=1000):
+
+    nu = 0.01 / np.pi
+
+    def pdefun(X, U, g):
+
+        U_1 = g.gradient(U, X)
+        if U_1 is not None:
+
+            u_x = U_1[:, 0]
+            u_t = U_1[:, 1]
+
+            U_xx = g.gradient(u_x, X)
+            if U_xx is not None:
+                u_xx = U_xx[:, 0]
+                return u_t + U*u_x - nu*u_xx
+
+        return tf.ones_like(U) * np.inf
+
+    X_true, U_true, _ = data.load.load_burgers_flat()
+
+    idx = np.random.choice(list(range(X_true.shape[0])), size=n)
+
+    X = X_true[idx, :]
+    U = U_true[idx, :]
+    X_df = X_true[idx, :]
+
+    return X, U, X_df, pdefun
 
 
 def main():
@@ -262,15 +365,19 @@ def main():
     # #plot_data_and_model(bcs, agraph, 'soln_trig_ode')
 
     # print("Solving simple harmonic motion")
-    # odefun, bcs = test_shm(1)
-    # X, U, X_df = format_training_data(bcs, n)
+    # X, U, X_df, odefun = test_shm(2*np.pi)
     # agraph, pareto_front = solve_diffeq_gpsr(X, U, X_df, odefun, 2)
-    #plot_pareto_front(pareto_front, 'pareto_shm_ode')
-    #plot_data_and_model(bcs, agraph, 'soln_trig_ode')
 
-    print("Solving the transport equation")
-    X, U, X_df, pdefun = test_transport(1, 20, 20)
-    agraph, pareto_front = solve_diffeq_gpsr(X, U, X_df, pdefun, 1)
+    # X, U, X_df, odefun = test_shm_const(2*np.pi)
+    # agraph, pareto_front = solve_diffeq_gpsr(X, U, X_df, odefun, 2)
+
+    # print("Solving the transport equation")
+    # X, U, X_df, pdefun = test_transport(1, 20, 20)
+    # agraph, pareto_front = solve_diffeq_gpsr(X, U, X_df, pdefun, 1)
+
+    print("Solving the burgers equation")
+    X, U, X_df, pdefun = test_burgers()
+    agraph, pareto_front = solve_diffeq_gpsr(X, U, X_df, pdefun, 2)
 
 
 if __name__ == '__main__':
