@@ -92,22 +92,25 @@ class DifferentialRegression_TF(VectorBasedFunction):
         U_hat = tf_graph_function(self.X)
         error_fit = self.U[:, 0] - U_hat.numpy()
 
-        # Use persistent gradients in the case that we need to take more than one derivative.
-        with tf.GradientTape(persistent=self.persistent) as g:
-            g.watch(self.X_df)
+        if self.X_df is not None:
+            # Use persistent gradients in the case that we need to take more than one derivative.
+            with tf.GradientTape(persistent=self.persistent) as g:
+                g.watch(self.X_df)
 
-            U_df = tf_graph_function(self.X_df)
+                U_df = tf_graph_function(self.X_df)
 
-            error_df = self.df_err(self.X_df, U_df, g).numpy()
+                error_df = self.df_err(self.X_df, U_df, g).numpy()
 
-        # g is not cleaned up automatically if set it as persistent
-        if self.persistent:
-            del g
+            # g is not cleaned up automatically if set it as persistent
+            if self.persistent:
+                del g
 
-        fitness = self._metric(error_fit) + \
-            self.differential_weight * self._metric(error_df)
+            fitness = self._metric(error_fit) + \
+                self.differential_weight * self._metric(error_df)
+        else:
+            fitness = self._metric(error_fit)
 
-        if self.detect_const_solutions and not np.isinf(self._metric(error_df)):
+        if self.detect_const_solutions and not np.isinf(self._metric(error_df)) and self.X_df is not None:
             random_idx = np.random.choice(list(range(U_df.shape[0])), 6)
             U_df_npy = U_df.numpy()
 

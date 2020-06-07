@@ -93,18 +93,26 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
 
 def main():
     hyperparams = {
-        "pop_size": 50,
-        "stack_size": 10,
-        "max_generations": 50,
+        "pop_size": 100,
+        "stack_size": 32,
+        "max_generations": 500,
         "fitness_threshold": 1e-6,
         "stagnation_threshold": 100,
         "check_frequency": 1,
         "min_generations": 1
     }
 
-    operators = ["+", "-", "sin", "cos", "exp"]
+    problem = "poisson"
 
-    solve_diffeq_gpsr("pendulum", operators, hyperparams, 2*np.pi)
+    operators = ["+", "-", "*"]
+
+    problem_args = [np.pi]
+
+    _, pareto_front = solve_diffeq_gpsr(
+        problem, operators, hyperparams, *problem_args)
+
+    log_trial("log.json", problem, operators,
+              problem_args, hyperparams, pareto_front)
 
 
 if __name__ == '__main__':

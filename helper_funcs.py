@@ -1,7 +1,44 @@
+import os
+import json
+import numpy as np
+import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import numpy as np
+
+
+def pareto_front_to_json(pareto_front):
+    pareto_front_list = []
+    for member in pareto_front:
+        pareto_front_list.append(
+            {
+                "complexity": member.get_complexity(),
+                "fitness": member.fitness,
+                "equation": member.__str__(),
+            })
+
+    return pareto_front_list
+
+
+def log_trial(fname, problem, operators, problem_args, hyperparams, pareto_front):
+
+    if os.path.exists(fname):
+        with open(fname, "r") as f:
+            data = json.load(f)
+    else:
+        data = []
+
+    data.append(
+        {
+            "problem": problem,
+            "problem_args": problem_args,
+            "hyperparams": hyperparams,
+            "operators": operators,
+            "pareto_front": pareto_front_to_json(pareto_front)
+        })
+
+    with open(fname, "w+") as f:
+        json.dump(data, f)
+
 
 def print_pareto_front(hall_of_fame):
     print("  FITNESS    COMPLEXITY    EQUATION")
@@ -9,6 +46,7 @@ def print_pareto_front(hall_of_fame):
         fit, compl, mem = member.fitness, member.get_complexity(), member
 #        print(member.get_stack_string())
         print(f"{fit}, {compl}, {mem}")
+
 
 def plot_pareto_front(hall_of_fame, fname):
     fitness_vals = []
@@ -23,6 +61,7 @@ def plot_pareto_front(hall_of_fame, fname):
     plt.ylabel('Fitness')
     plt.savefig(fname + ".pdf")
 
+
 def plot_data_and_model(bcs, agraph, fname):
     x = np.linspace(bcs[0][0], bcs[0][1], 100)
     best_individual = agraph.get_best_individual()
@@ -35,4 +74,3 @@ def plot_data_and_model(bcs, agraph, fname):
     plt.ylabel('y')
     plt.legend()
     plt.savefig(fname + ".pdf")
-

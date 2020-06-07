@@ -288,10 +288,12 @@ def test_poisson(k):
             u_x = U_1[:, 0]
             u_y = U_1[:, 0]
 
-            u_xx = g.gradient(u_x, X)[:, 0]
-            u_yy = g.gradient(u_y, X)[:, 1]
+            U_xx = g.gradient(u_x, X)
+            U_yy = g.gradient(u_y, X)
 
-            if u_xx is not None and u_yy is not None:
+            if U_xx is not None and U_yy is not None:
+                u_xx = U_xx[:, 0]
+                u_yy = U_yy[:, 1]
 
                 return u_xx + u_yy + 2*k**2*tf.sin(X[:, 0])*tf.sin(X[:, 1])
 
@@ -302,15 +304,79 @@ def test_poisson(k):
     X_left = np.hstack([np.zeros((n_b, 1)), l])
     X_right = np.hstack([np.ones((n_b, 1)), l])
     X_bottom = np.hstack([l, np.zeros((n_b, 1))])
-    X_top = np.hstack([np.zeros((n_b, 1)), l])
+    X_top = np.hstack([l, np.ones((n_b, 1))])
 
     X = np.vstack([X_left, X_right, X_bottom, X_top])
     U = np.zeros((n_b*4, 1))
 
     n_df = 5000
-    X_df = np.random.uniform(low=[0, 0], high=[1, 1], shape=(n_df, 2))
+    X_df = np.random.uniform(low=[0, 0], high=[1, 1], size=(n_df, 2))
 
     return X, U, X_df, pdefun, 2
+
+
+def test_burgers_slice():
+    nu = 0.01 / np.pi
+
+    def pdefun(X, U, g):
+
+        U_1 = g.gradient(U, X)
+        if U_1 is not None:
+
+            u_x = U_1[:, 0]
+            u_t = U_1[:, 1]
+
+            U_xx = g.gradient(u_x, X)
+            if U_xx is not None:
+                u_xx = U_xx[:, 0]
+                return u_t + U*u_x - nu*u_xx
+
+        return tf.ones_like(U) * np.inf
+
+    _, _, [x, t, u] = data.load.load_burgers_flat()
+
+    t_idx = int(t.shape[0] * .75)  # Find the index for t
+
+    X = np.empty((x.shape[0], 2))
+    U = np.empty((x.shape[0], 1))
+    for i, x in enumerate(x):
+        X[i, 0] = x
+        X[i, 1] = t[t_idx]
+        U[i, 0] = u[i, t_idx]
+
+    return X, U, X, pdefun, 2
+
+
+def test_burgers_slice_nodf():
+    nu = 0.01 / np.pi
+
+    def pdefun(X, U, g):
+
+        U_1 = g.gradient(U, X)
+        if U_1 is not None:
+
+            u_x = U_1[:, 0]
+            u_t = U_1[:, 1]
+
+            U_xx = g.gradient(u_x, X)
+            if U_xx is not None:
+                u_xx = U_xx[:, 0]
+                return u_t + U*u_x - nu*u_xx
+
+        return tf.ones_like(U) * np.inf
+
+    _, _, [x, t, u] = data.load.load_burgers_flat()
+
+    t_idx = int(t.shape[0] * .75)  # Find the index for t
+
+    X = np.empty((x.shape[0], 2))
+    U = np.empty((x.shape[0], 1))
+    for i, x in enumerate(x):
+        X[i, 0] = x
+        X[i, 1] = t[t_idx]
+        U[i, 0] = u[i, t_idx]
+
+    return X, U, None, pdefun, 2
 
 
 dispatch = {
@@ -318,6 +384,8 @@ dispatch = {
     "transport": test_transport,
     "burgers": test_burgers,
     "burgers_dense": test_burgers_dense,
+    "burgers_slice": test_burgers_slice,
+    "burgers_slice_nodf": test_burgers_slice_nodf,
     "pendulum": test_pendulum,
     "poisson": test_poisson,
 }
