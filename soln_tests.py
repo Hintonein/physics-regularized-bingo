@@ -5,7 +5,6 @@ import time
 import numpy as np
 import math as m
 from mpi4py import MPI
-import tensorflow as tf
 from test_problems import get_test
 
 from helper_funcs import *
@@ -45,11 +44,7 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
     rank = MPI.COMM_WORLD.Get_rank()
 
     # rank 0 generates the data to be fitted
-    if rank == 0:
-        X, U, X_df, error_df_fn, df_order = get_test(test_name, *args)
-
-    # TODO: Update for MPI, need to broadcase X,U,X_df
-    dummy = MPI.COMM_WORLD.bcast((X, U, X_df), root=0)
+    X, U, X_df, error_df_fn, df_order = get_test(test_name, *args)
 
     # tell bingo which mathematical building blocks may be used
     component_generator = ComponentGenerator(X.shape[1])
@@ -89,6 +84,8 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
         print("Generation: ", archipelago.generational_age)
         print_pareto_front(pareto_front)
         return archipelago, pareto_front
+    else:
+        return None, None
 
 
 def main():
@@ -107,6 +104,15 @@ def main():
     operators = ["+", "-", "*"]
 
     problem_args = [np.pi]
+
+    _, pareto_front = solve_diffeq_gpsr(
+        problem, operators, hyperparams, *problem_args)
+
+    if pareto_front:
+        log_trial("log.json", problem, operators,
+                  problem_args, hyperparams, pareto_front)
+
+    operators = ["+", "-", "*", "sin", "cos"]
 
     _, pareto_front = solve_diffeq_gpsr(
         problem, operators, hyperparams, *problem_args)

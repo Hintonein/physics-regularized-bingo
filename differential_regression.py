@@ -4,6 +4,8 @@ import numpy as np
 
 from bingo.evaluation.fitness_function import VectorBasedFunction
 
+tf.config.set_visible_devices([], 'GPU')
+
 
 class DifferentialRegression_TF(VectorBasedFunction):
 

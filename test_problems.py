@@ -4,6 +4,9 @@ import data.load
 from scipy.integrate import solve_ivp
 
 
+tf.config.set_visible_devices([], 'GPU')
+
+
 def get_test(test_name, *args):
     return dispatch[test_name](*args)
 
