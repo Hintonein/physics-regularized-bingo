@@ -1,0 +1,278 @@
+[
+  {
+    "problem": "poisson",
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 100,
+      "stack_size": 32,
+      "max_generations": 500,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "check_frequency": 1,
+      "min_generations": 1
+    },
+    "operators": ["+", "-", "*"],
+    "pareto_front": [
+      {
+        "complexity": 13,
+        "fitness": 1.0195743792311942,
+        "equation": "-17.023983568110918 + X_1 + (4.0472787207872685)(4.0472787207872685) + X_0 - ((X_0 + X_1)((X_1)((X_0)(X_0))))"
+      },
+      {
+        "complexity": 10,
+        "fitness": 1.0195743792311953,
+        "equation": "X_0 + -0.6435185455509828 + X_1 - ((X_0 + X_1)((X_1)((X_0)(X_0))))"
+      },
+      {
+        "complexity": 9,
+        "fitness": 1.1035386154556668,
+        "equation": "X_0 + -0.14351885032958972 - ((X_0 + X_1)((X_1)((X_0)(X_0))))"
+      },
+      {
+        "complexity": 8,
+        "fitness": 1.332327781495207,
+        "equation": "((X_0)(X_0 + X_1))(X_1 - (X_1) - ((X_1)(X_0)))"
+      },
+      {
+        "complexity": 7,
+        "fitness": 1.6114430509642388,
+        "equation": "(((X_0)(X_1) - (X_1))(X_0))(-3.9923439361431265)"
+      },
+      {
+        "complexity": 6,
+        "fitness": 2.6803321363237966,
+        "equation": "((X_0)(X_0))((X_1)(-2.2024017416306814))"
+      },
+      {
+        "complexity": 5,
+        "fitness": 3.06181155593755,
+        "equation": "(X_0 - ((X_0)(X_0)))(X_0) + X_0 - ((X_0)(X_0))"
+      },
+      {
+        "complexity": 4,
+        "fitness": 4.194201073975088,
+        "equation": "X_0 - ((X_0)(X_0))"
+      },
+      { "complexity": 1, "fitness": Infinity, "equation": "X_0" }
+    ]
+  },
+  {
+    "problem": "poisson",
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 100,
+      "stack_size": 32,
+      "max_generations": 500,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "check_frequency": 1,
+      "min_generations": 1
+    },
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "pareto_front": [
+      {
+        "complexity": 11,
+        "fitness": 1.0670884661789954,
+        "equation": "sin((sin(X_1))((X_0)(2.3206518934843237))) - ((((X_0)(2.3206518934843237))(X_0))(sin(X_1)))"
+      },
+      {
+        "complexity": 10,
+        "fitness": 1.1460349237427103,
+        "equation": "X_0 - ((X_0)((X_0)((X_1)(X_1)) + ((X_1)(X_1))(X_0 - ((X_1)(X_1) - (X_0)))))"
+      },
+      {
+        "complexity": 8,
+        "fitness": 1.307145952025321,
+        "equation": "((X_0 + X_0)(cos(X_0) - (X_0)))(X_1)"
+      },
+      {
+        "complexity": 7,
+        "fitness": 1.6139362120471994,
+        "equation": "(X_0 - ((X_0)(X_0)))(X_1 + X_1 + X_1 + X_1)"
+      },
+      {
+        "complexity": 5,
+        "fitness": 2.860797401920185,
+        "equation": "sin(X_0) - ((X_0)((X_0)(X_0)))"
+      },
+      {
+        "complexity": 4,
+        "fitness": 3.0644583557338683,
+        "equation": "X_0 - ((X_0)((X_0)(X_0)))"
+      },
+      {
+        "complexity": 3,
+        "fitness": 3.839344912395203,
+        "equation": "sin(X_0 + X_0)"
+      },
+      {
+        "complexity": 2,
+        "fitness": 5.5246570525094345,
+        "equation": "sin(X_0)"
+      },
+      { "complexity": 1, "fitness": Infinity, "equation": "X_1" }
+    ]
+  },
+  {
+    "problem": "poisson",
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 100,
+      "stack_size": 16,
+      "max_generations": 500,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "check_frequency": 1,
+      "min_generations": 1
+    },
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "pareto_front": [
+      {
+        "complexity": 12,
+        "fitness": 0.9686416619907331,
+        "equation": "((X_1)(X_0) + sin(X_0))((X_0)(X_1 - ((X_1)(X_0))) - (sin(X_0) - (cos(X_1)))) + (X_0)(X_1 - ((X_1)(X_0)))"
+      },
+      {
+        "complexity": 10,
+        "fitness": 0.9815526428652646,
+        "equation": "(sin(X_1))((1.0280422372998104)((X_1 - (X_0 + X_0))((X_1)(X_0 + X_0))))"
+      },
+      {
+        "complexity": 8,
+        "fitness": 1.0056647543960973,
+        "equation": "(sin(X_1))((X_1 - (X_0 + X_0))((X_1)(X_0 + X_0)))"
+      },
+      {
+        "complexity": 7,
+        "fitness": 1.1163667493282365,
+        "equation": "X_0 - (((X_0)(X_1) + (X_0)(X_0))((X_0)(X_1)))"
+      },
+      {
+        "complexity": 6,
+        "fitness": 1.7145584196012518,
+        "equation": "(X_1)((cos(X_0 + X_0))(X_0 + X_0))"
+      },
+      {
+        "complexity": 5,
+        "fitness": 2.8216876624707687,
+        "equation": "(X_0)(cos(X_0) - ((X_0)(X_0)))"
+      },
+      {
+        "complexity": 4,
+        "fitness": 3.0140189332637832,
+        "equation": "X_0 - ((X_0)((X_0)(X_0)))"
+      },
+      {
+        "complexity": 3,
+        "fitness": 3.7588840201708296,
+        "equation": "sin(X_0 + X_0)"
+      },
+      { "complexity": 2, "fitness": 5.42637469754718, "equation": "sin(X_0)" },
+      { "complexity": 1, "fitness": Infinity, "equation": "X_1" }
+    ]
+  },
+  {
+    "problem": "transport",
+    "problem_args": [6.283185307179586],
+    "hyperparams": {
+      "pop_size": 100,
+      "stack_size": 32,
+      "max_generations": 500,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "check_frequency": 1,
+      "min_generations": 1
+    },
+    "operators": ["+", "-", "*"],
+    "pareto_front": [
+      {
+        "complexity": 13,
+        "fitness": 0.6774532533455452,
+        "equation": "(7096.517600129703)((X_1 + X_1 - (X_1) - (X_1) + -5496.62415971675 - (-5496.62415971675))(X_1 - (X_1) - (X_1) + -5496.62415971675 - ((X_1 - (X_1) - (X_1) + -5496.62415971675)(X_1 - (X_1) - (X_1) + -5496.62415971675)))) + (X_1 + X_1 - (X_1) - (X_1) + -5496.62415971675 - (-5496.62415971675))(X_1 - (X_1) - (X_1) + -5496.62415971675 - ((X_1 - (X_1) - (X_1) + -5496.62415971675)(X_1 - (X_1) - (X_1) + -5496.62415971675)))"
+      },
+      {
+        "complexity": 11,
+        "fitness": 0.7057249204130379,
+        "equation": "(X_1)(((X_1)(X_1))((X_1)((-1.3751942203908602e-07)(X_1))) - (-7.748568103244717e-07 - (X_1 - (X_1))))"
+      },
+      {
+        "complexity": 7,
+        "fitness": 0.705724975342912,
+        "equation": "(X_1)(3054.7010588636385 - (X_1 - (X_1 + -3054.701058142169)))"
+      },
+      {
+        "complexity": 6,
+        "fitness": 0.7057250147202491,
+        "equation": "((3.2652307560048626e-10)(2351.387101812434))(3.2652307560048626e-10 + X_1)"
+      },
+      {
+        "complexity": 5,
+        "fitness": 0.7057250618034162,
+        "equation": "(1.5009484200111753e-07)(X_1 - (X_0))"
+      },
+      {
+        "complexity": 4,
+        "fitness": 0.7057250635304501,
+        "equation": "(X_1)((0.0009083992156393788)(0.0009083992156393788))"
+      },
+      {
+        "complexity": 3,
+        "fitness": 0.7057252105082891,
+        "equation": "(9.980537073320553e-07)(X_1)"
+      },
+      { "complexity": 1, "fitness": 1.7136791035216357, "equation": "X_1" }
+    ]
+  },
+  {
+    "problem": "transport",
+    "problem_args": [6.283185307179586],
+    "hyperparams": {
+      "pop_size": 100,
+      "stack_size": 32,
+      "max_generations": 500,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "check_frequency": 1,
+      "min_generations": 1
+    },
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "pareto_front": [
+      {
+        "complexity": 8,
+        "fitness": 0.6502335515214033,
+        "equation": "(-0.07554230387090169)(X_0 - ((X_1 + X_1)(3.141592653580606)))"
+      },
+      {
+        "complexity": 7,
+        "fitness": 0.705724826725727,
+        "equation": "(cos(sin(cos(cos(X_1)))))(-3.4579452684805936e-06)"
+      },
+      {
+        "complexity": 6,
+        "fitness": 0.7057248851458758,
+        "equation": "(cos(sin(X_1)))(sin(-166.50440892149132))"
+      },
+      {
+        "complexity": 5,
+        "fitness": 0.7057249439400658,
+        "equation": "(X_1 + cos(X_1))(1.1284411969841828e-06)"
+      },
+      {
+        "complexity": 4,
+        "fitness": 0.7057249663473513,
+        "equation": "(sin(8281.238235573584))(X_1)"
+      },
+      {
+        "complexity": 3,
+        "fitness": 0.7057254664711523,
+        "equation": "(-1.9002373531500785e-07)(X_0)"
+      },
+      {
+        "complexity": 2,
+        "fitness": 1.5580265531582667,
+        "equation": "sin(X_1)"
+      },
+      { "complexity": 1, "fitness": 1.7136791035216357, "equation": "X_1" }
+    ]
+  }
+]

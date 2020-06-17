@@ -5,7 +5,7 @@ import time
 import numpy as np
 import math as m
 from mpi4py import MPI
-from test_problems import get_test
+from test_problems import get_test, get_linear_weight_function
 
 from helper_funcs import *
 
@@ -38,6 +38,7 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
     fitness_threshold = hyperparams["fitness_threshold"]
     stagnation_threshold = hyperparams["stagnation_threshold"]
     check_frequency = hyperparams["check_frequency"]
+    differential_weight = hyperparams["differential_weight"]
     min_generations = 1
 
     communicator = MPI.COMM_WORLD
@@ -57,7 +58,8 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
 
     # tell bingo how fitness is defined
     fitness = DifferentialRegression_TF(
-        X, U, X_df, error_df_fn, df_order, metric="rmse")
+        X, U, X_df, error_df_fn, df_order,
+        metric="rmse", differential_weight=differential_weight)
 
     # tell bingo how to calibrate any coefficients
     local_opt_fitness = ContinuousLocalOptimization(
@@ -96,29 +98,25 @@ def main():
         "fitness_threshold": 1e-6,
         "stagnation_threshold": 100,
         "check_frequency": 1,
-        "min_generations": 1
+        "min_generations": 1,
+        "use_linear_normalization": True
     }
 
     problem = "poisson"
 
-    operators = ["+", "-", "*"]
+    operators = ["+", "-", "*", "sin", "cos"]
 
     problem_args = [np.pi]
 
-    _, pareto_front = solve_diffeq_gpsr(
-        problem, operators, hyperparams, *problem_args)
+    for weight in [1e-3, 1e-2, 1e-1, 1.0, 1e1, 1e2]:
+        hyperparams["differential_weight"] = weight
 
-    if pareto_front:
-        log_trial("log.json", problem, operators,
-                  problem_args, hyperparams, pareto_front)
+        _, pareto_front = solve_diffeq_gpsr(
+            problem, operators, hyperparams, *problem_args)
 
-    operators = ["+", "-", "*", "sin", "cos"]
-
-    _, pareto_front = solve_diffeq_gpsr(
-        problem, operators, hyperparams, *problem_args)
-
-    log_trial("log.json", problem, operators,
-              problem_args, hyperparams, pareto_front)
+        if pareto_front:
+            log_trial("logs/poisson_hyperparams.json", problem, operators,
+                      problem_args, hyperparams, pareto_front)
 
 
 if __name__ == '__main__':

@@ -11,6 +11,10 @@ def get_test(test_name, *args):
     return dispatch[test_name](*args)
 
 
+def get_linear_weight_function(test_name, *args):
+    return dispatch_weight[test_name](*args)
+
+
 def format_training_data(bcs, n):
     x_bcs = np.asarray(
         bcs[0], dtype=np.float64).reshape((-1, 1))
@@ -144,8 +148,11 @@ def test_shm_dense(omega):
     return X, U, X_df, odefun, 2
 
 
-def test_transport(v, n_x, n_t):
-    ''' 1D transport equation with initial condion sin(x), periodic boundary condition'''
+def test_transport(v):
+    ''' 1D transport equation with initial condion sin(x), periodic boundary conditions'''
+
+    n_x = 256
+    n_t = 256
 
     def pdefun(X, U, g):
         U_1 = g.gradient(U, X)
@@ -183,6 +190,23 @@ def test_transport(v, n_x, n_t):
             X_df[idx, 0], X_df[idx, 1] = x, t
 
     return X_boundary, U_boundary, X_df, pdefun, 1
+
+
+def transport_weight(v):
+
+    def weight_fn(X, U, g):
+        U_1 = g.gradient(U, X)
+
+        if U_1 is not None:
+
+            u_x = U_1[:, 0]
+            u_t = U_1[:, 1]
+
+            return tf.abs(u_t) + tf.abs(v * u_x)
+        else:
+            return tf.ones_like(U)*np.inf
+
+    return weight_fn
 
 
 def test_burgers():
@@ -381,6 +405,10 @@ def test_burgers_slice_nodf():
 
     return X, U, None, pdefun, 2
 
+
+dispatch_weight = {
+    "transport": transport_weight
+}
 
 dispatch = {
     "shm": test_shm,

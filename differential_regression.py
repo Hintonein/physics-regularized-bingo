@@ -12,7 +12,7 @@ class DifferentialRegression_TF(VectorBasedFunction):
     def __init__(self,
                  X, U, X_df, df_err,
                  df_order=1,
-                 differential_weight=1,
+                 differential_weight=1.0,
                  metric="mae",
                  detect_const_solutions=True):
 
@@ -96,7 +96,7 @@ class DifferentialRegression_TF(VectorBasedFunction):
 
         if self.X_df is not None:
             # Use persistent gradients in the case that we need to take more than one derivative.
-            with tf.GradientTape(persistent=self.persistent) as g:
+            with tf.GradientTape(persistent=True) as g:
                 g.watch(self.X_df)
 
                 U_df = tf_graph_function(self.X_df)
@@ -104,24 +104,26 @@ class DifferentialRegression_TF(VectorBasedFunction):
                 error_df = self.df_err(self.X_df, U_df, g).numpy()
 
             # g is not cleaned up automatically if set it as persistent
-            if self.persistent:
-                del g
+            del g
 
             fitness = self._metric(error_fit) + \
                 self.differential_weight * self._metric(error_df)
+
+            if self.detect_const_solutions and not np.isinf(fitness):
+                random_idx = np.random.choice(list(range(U_df.shape[0])), 6)
+                U_df_npy = U_df.numpy()
+
+                vals = U_df_npy[random_idx]
+
+                residual = vals[0] - vals[1] + \
+                    vals[2] - vals[3] + vals[4] - vals[5]
+
+                if np.abs(residual) < 1e-6:
+                    fitness = np.inf
+
+            if np.isnan(fitness):
+                fitness = np.inf
         else:
             fitness = self._metric(error_fit)
-
-        if self.detect_const_solutions and not np.isinf(self._metric(error_df)) and self.X_df is not None:
-            random_idx = np.random.choice(list(range(U_df.shape[0])), 6)
-            U_df_npy = U_df.numpy()
-
-            vals = U_df_npy[random_idx]
-
-            residual = vals[0] - vals[1] + \
-                vals[2] - vals[3] + vals[4] - vals[5]
-
-            if np.abs(residual) < 1e-6:
-                fitness = np.inf
 
         return fitness
