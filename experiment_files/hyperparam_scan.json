@@ -4,7 +4,7 @@
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 125,
+      "pop_size": 120,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -19,7 +19,7 @@
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 125,
+      "pop_size": 120,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -34,7 +34,7 @@
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 125,
+      "pop_size": 120,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -49,7 +49,7 @@
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 125,
+      "pop_size": 120,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -64,7 +64,7 @@
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 125,
+      "pop_size": 120,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -79,7 +79,7 @@
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 125,
+      "pop_size": 120,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
