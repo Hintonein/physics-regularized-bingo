@@ -27,9 +27,16 @@ def log_trial(fname, problem, operators, problem_args, hyperparams, pareto_front
     else:
         data = []
 
+    try:
+        git_hash = subprocess.check_output(
+            ["git", "describe", "--always"]).decode("utf-8").strip()
+    except:
+        git_hash = ""
+
     data.append(
         {
             "problem": problem,
+            "git_hash": git_hash,
             "problem_args": problem_args,
             "hyperparams": hyperparams,
             "operators": operators,

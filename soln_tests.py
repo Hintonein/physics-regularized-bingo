@@ -5,7 +5,7 @@ import time
 import numpy as np
 import math as m
 from mpi4py import MPI
-from test_problems import get_test, get_linear_weight_function
+from test_problems import get_test
 
 from helper_funcs import *
 
@@ -92,14 +92,13 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
 
 def main():
     hyperparams = {
-        "pop_size": 100,
-        "stack_size": 32,
-        "max_generations": 500,
+        "pop_size": 50,
+        "stack_size": 16,
+        "max_generations": 50,
         "fitness_threshold": 1e-6,
         "stagnation_threshold": 100,
         "check_frequency": 1,
         "min_generations": 1,
-        "use_linear_normalization": True
     }
 
     problem = "poisson"

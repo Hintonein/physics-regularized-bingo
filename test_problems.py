@@ -1,18 +1,16 @@
 import numpy as np
 import tensorflow as tf
-import data.load
-from scipy.integrate import solve_ivp
 
+import problems.poisson
+import problems.linear_advection
+import problems.burgers
+import problems.full_pendulum
 
 tf.config.set_visible_devices([], 'GPU')
 
 
 def get_test(test_name, *args):
     return dispatch[test_name](*args)
-
-
-def get_linear_weight_function(test_name, *args):
-    return dispatch_weight[test_name](*args)
 
 
 def format_training_data(bcs, n):
@@ -148,275 +146,83 @@ def test_shm_dense(omega):
     return X, U, X_df, odefun, 2
 
 
-def test_transport(v):
+def linear_advection(v):
     ''' 1D transport equation with initial condion sin(x), periodic boundary conditions'''
 
-    n_x = 256
-    n_t = 256
+    X_boundary, U_boundary, X_df = problems.linear_advection.gen_training_data(
+        v)
 
-    def pdefun(X, U, g):
-        U_1 = g.gradient(U, X)
+    pdefn = problems.linear_advection.get_pdefn(v)
 
-        if U_1 is not None:
-
-            u_x = U_1[:, 0]
-            u_t = U_1[:, 1]
-
-            return (u_t + v * u_x)
-        else:
-            return tf.ones_like(U)*np.inf
-
-    def solution_true(X):
-        return np.sin(X[:, 0] - X[:, 1]*v).reshape((X.shape[0], 1))
-
-    X_init_x = np.linspace(0, 2*np.pi, n_x).reshape((n_x, 1))
-    X_init = np.hstack([X_init_x, np.zeros((n_x, 1))])
-
-    X_min_x = np.zeros((n_t, 1))
-    X_min_t = np.linspace(0, 1, n_t).reshape((n_t, 1))
-    X_min = np.hstack([X_min_x, X_min_t])
-
-    X_max_x = np.ones((n_t, 1)) * 2 * np.pi
-    X_max_t = np.linspace(0, 1, n_t).reshape((n_t, 1))
-    X_max = np.hstack([X_max_x, X_max_t])
-
-    X_boundary = np.vstack([X_init, X_min, X_max])
-    U_boundary = solution_true(X_boundary)
-
-    X_df = np.empty((n_x*n_t, 2))
-    for i, x in enumerate(np.linspace(0, 2*np.pi, n_x)):
-        for j, t in enumerate(np.linspace(0, 1, n_t)):
-            idx = i*n_t + j
-            X_df[idx, 0], X_df[idx, 1] = x, t
-
-    return X_boundary, U_boundary, X_df, pdefun, 1
-
-
-def transport_weight(v):
-
-    def weight_fn(X, U, g):
-        U_1 = g.gradient(U, X)
-
-        if U_1 is not None:
-
-            u_x = U_1[:, 0]
-            u_t = U_1[:, 1]
-
-            return tf.abs(u_t) + tf.abs(v * u_x)
-        else:
-            return tf.ones_like(U)*np.inf
-
-    return weight_fn
+    return X_boundary, U_boundary, X_df, pdefn, 1
 
 
 def test_burgers():
 
-    nu = 0.01 / np.pi
+    X, U, X_df = problems.burgers.get_training_data()
 
-    def pdefun(X, U, g):
+    pdefn = problems.burgers.get_pdefn()
 
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
-
-            u_x = U_1[:, 0]
-            u_t = U_1[:, 1]
-
-            U_xx = g.gradient(u_x, X)
-            if U_xx is not None:
-                u_xx = U_xx[:, 0]
-                return u_t + U*u_x - nu*u_xx
-
-        return tf.ones_like(U) * np.inf
-
-    X_true, U_true, X_bounds, U_bounds, _ = data.load.load_burgers_bounds()
-
-    X = np.vstack(X_bounds)
-    U = np.vstack(U_bounds)
-
-    X_df = np.random.uniform(low=[-1, 0], high=[1, 1], size=(5000, 2))
-
-    return X, U, X_df, pdefun, 2
+    return X, U, X_df, pdefn, 2
 
 
 def test_burgers_dense(n=1000):
 
-    nu = 0.01 / np.pi
-
-    def pdefun(X, U, g):
-
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
-
-            u_x = U_1[:, 0]
-            u_t = U_1[:, 1]
-
-            U_xx = g.gradient(u_x, X)
-            if U_xx is not None:
-                u_xx = U_xx[:, 0]
-                return u_t + U*u_x - nu*u_xx
-
-        return tf.ones_like(U) * np.inf
-
-    X_true, U_true, _ = data.load.load_burgers_flat()
+    X_true, U_true = problems.burgers.get_test_data()
 
     idx = np.random.choice(list(range(X_true.shape[0])), size=n)
+
+    pdefn = problems.burgers.get_pdefn()
 
     X = X_true[idx, :]
     U = U_true[idx, :]
     X_df = X_true[idx, :]
 
-    return X, U, X_df, pdefun, 2
+    return X, U, X_df, pdefn, 2
+
+
+def test_burgers_slice():
+
+    x, t, u = problems.burgers.load_data()
+
+    t_idx = int(t.shape[0] * .75)  # Find the index for t
+
+    X = np.empty((x.shape[0], 2))
+    U = np.empty((x.shape[0], 1))
+    for i, x in enumerate(x):
+        X[i, 0] = x
+        X[i, 1] = t[t_idx]
+        U[i, 0] = u[i, t_idx]
+
+    pdefn = problems.burgers.get_pdefn()
+
+    return X, U, X, pdefn, 2
 
 
 def test_pendulum(omega):
 
-    def odefun(X, U, g):
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
-            U_2 = g.gradient(U_1[:, 0], X)
-            if U_2 is not None:
-                return U_2[:, 0] + omega**2 * tf.sin(U)
+    X, U, X_df = problems.full_pendulum.get_training_data(omega)
 
-        return tf.ones_like(U)*np.inf
+    pdefn = problems.full_pendulum.get_pdefn(omega)
 
-    def pendulum_system(t, xv):
-        x, v = xv
-        dx_dt = v
-        dv_dt = -omega**2 * np.sin(x)
-
-        return [dx_dt, dv_dt]
-
-    initial_conditions = np.array([-np.pi/2, 0])
-
-    solution = solve_ivp(pendulum_system, (0, 2),
-                         initial_conditions, max_step=0.001, dense_output=True)
-
-    X = np.array([0.05, 0.1])[:, None]
-    U = (solution.sol(X[:, 0])[0, :])[:, None]
-    print(U)
-
-    X_true = solution.t[:, None]
-    U_true = (solution.y[0, :])[:, None]
-
-    X_df = np.linspace(0, 2, 128)[:, None]
-
-    return X, U, X_df, odefun, 2
+    return X, U, X_df, pdefn, 2
 
 
 def test_poisson(k):
     '''Poission equation with solutions sin(kx)*sin(ky)'''
 
-    def solution(X):
-        return np.sin(k*X[:, 0])*np.sin(k*X[:, 1])[:, 1]
+    X, U, X_df = problems.poisson.gen_training_data(k)
+    pdefn = problems.poisson.get_pdefn(k)
 
-    def pdefun(X, U, g):
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
-            u_x = U_1[:, 0]
-            u_y = U_1[:, 0]
+    return X, U, X_df, pdefn, 2
 
-            U_xx = g.gradient(u_x, X)
-            U_yy = g.gradient(u_y, X)
-
-            if U_xx is not None and U_yy is not None:
-                u_xx = U_xx[:, 0]
-                u_yy = U_yy[:, 1]
-
-                return u_xx + u_yy + 2*k**2*tf.sin(X[:, 0])*tf.sin(X[:, 1])
-
-        return tf.ones_like(U) * np.inf
-
-    n_b = 64
-    l = np.linspace(0, 1, n_b)[:, None]
-    X_left = np.hstack([np.zeros((n_b, 1)), l])
-    X_right = np.hstack([np.ones((n_b, 1)), l])
-    X_bottom = np.hstack([l, np.zeros((n_b, 1))])
-    X_top = np.hstack([l, np.ones((n_b, 1))])
-
-    X = np.vstack([X_left, X_right, X_bottom, X_top])
-    U = np.zeros((n_b*4, 1))
-
-    n_df = 5000
-    X_df = np.random.uniform(low=[0, 0], high=[1, 1], size=(n_df, 2))
-
-    return X, U, X_df, pdefun, 2
-
-
-def test_burgers_slice():
-    nu = 0.01 / np.pi
-
-    def pdefun(X, U, g):
-
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
-
-            u_x = U_1[:, 0]
-            u_t = U_1[:, 1]
-
-            U_xx = g.gradient(u_x, X)
-            if U_xx is not None:
-                u_xx = U_xx[:, 0]
-                return u_t + U*u_x - nu*u_xx
-
-        return tf.ones_like(U) * np.inf
-
-    _, _, [x, t, u] = data.load.load_burgers_flat()
-
-    t_idx = int(t.shape[0] * .75)  # Find the index for t
-
-    X = np.empty((x.shape[0], 2))
-    U = np.empty((x.shape[0], 1))
-    for i, x in enumerate(x):
-        X[i, 0] = x
-        X[i, 1] = t[t_idx]
-        U[i, 0] = u[i, t_idx]
-
-    return X, U, X, pdefun, 2
-
-
-def test_burgers_slice_nodf():
-    nu = 0.01 / np.pi
-
-    def pdefun(X, U, g):
-
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
-
-            u_x = U_1[:, 0]
-            u_t = U_1[:, 1]
-
-            U_xx = g.gradient(u_x, X)
-            if U_xx is not None:
-                u_xx = U_xx[:, 0]
-                return u_t + U*u_x - nu*u_xx
-
-        return tf.ones_like(U) * np.inf
-
-    _, _, [x, t, u] = data.load.load_burgers_flat()
-
-    t_idx = int(t.shape[0] * .75)  # Find the index for t
-
-    X = np.empty((x.shape[0], 2))
-    U = np.empty((x.shape[0], 1))
-    for i, x in enumerate(x):
-        X[i, 0] = x
-        X[i, 1] = t[t_idx]
-        U[i, 0] = u[i, t_idx]
-
-    return X, U, None, pdefun, 2
-
-
-dispatch_weight = {
-    "transport": transport_weight
-}
 
 dispatch = {
     "shm": test_shm,
-    "transport": test_transport,
+    "linear_advection": linear_advection,
     "burgers": test_burgers,
     "burgers_dense": test_burgers_dense,
     "burgers_slice": test_burgers_slice,
-    "burgers_slice_nodf": test_burgers_slice_nodf,
     "pendulum": test_pendulum,
     "poisson": test_poisson,
 }
