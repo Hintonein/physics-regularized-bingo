@@ -1,0 +1,92 @@
+[
+  {
+    "problem": "poisson",
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 125,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1e-3,
+      "check_frequency": 1,
+      "min_generations": 1
+    }
+  },
+  {
+    "problem": "poisson",
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 125,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1e-2,
+      "check_frequency": 1,
+      "min_generations": 1
+    }
+  },
+  {
+    "problem": "poisson",
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 125,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1e-1,
+      "check_frequency": 1,
+      "min_generations": 1
+    }
+  },
+  {
+    "problem": "poisson",
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 125,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1.0,
+      "check_frequency": 1,
+      "min_generations": 1
+    }
+  },
+  {
+    "problem": "poisson",
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 125,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1e1,
+      "check_frequency": 1,
+      "min_generations": 1
+    }
+  },
+  {
+    "problem": "poisson",
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 125,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1e2,
+      "check_frequency": 1,
+      "min_generations": 1
+    }
+  }
+]

@@ -6,6 +6,8 @@ import numpy as np
 import math as m
 from mpi4py import MPI
 from test_problems import get_test
+import sys
+import json
 
 from helper_funcs import *
 
@@ -90,33 +92,32 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
         return None, None
 
 
-def main():
-    hyperparams = {
-        "pop_size": 50,
-        "stack_size": 16,
-        "max_generations": 50,
-        "fitness_threshold": 1e-6,
-        "stagnation_threshold": 100,
-        "check_frequency": 1,
-        "min_generations": 1,
-    }
+def main(experiment_params):
+    problem = experiment_params["problem"]
+    hyperparams = experiment_params["hyperparams"]
+    operators = experiment_params["operators"]
+    problem_args = experiment_params["problem_args"]
 
-    problem = "poisson"
+    _, pareto_front = solve_diffeq_gpsr(
+        problem, operators, hyperparams, *problem_args)
 
-    operators = ["+", "-", "*", "sin", "cos"]
-
-    problem_args = [np.pi]
-
-    for weight in [1e-3, 1e-2, 1e-1, 1.0, 1e1, 1e2]:
-        hyperparams["differential_weight"] = weight
-
-        _, pareto_front = solve_diffeq_gpsr(
-            problem, operators, hyperparams, *problem_args)
-
-        if pareto_front:
-            log_trial("logs/poisson_hyperparams.json", problem, operators,
-                      problem_args, hyperparams, pareto_front)
+    if pareto_front:
+        log_trial("logs/poisson_hyperparams.json", problem, operators,
+                  problem_args, hyperparams, pareto_front)
 
 
 if __name__ == '__main__':
-    main()
+    experiment_file = sys.argv[1]
+
+    with open(experiment_file) as f:
+        setup_json = json.load(f)
+
+    if type(setup_json) is list:
+        if len(sys.argv) > 2:
+            idx = int(sys.argv[2])
+            main(setup_json[idx])
+        else:
+            for setup in setup_json:
+                main(setup)
+    else:
+        main(setup_json)
