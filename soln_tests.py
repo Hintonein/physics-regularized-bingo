@@ -93,6 +93,7 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
 
 
 def main(experiment_params):
+    log_file = experiment_params["log_file"]
     problem = experiment_params["problem"]
     hyperparams = experiment_params["hyperparams"]
     operators = experiment_params["operators"]
@@ -102,7 +103,7 @@ def main(experiment_params):
         problem, operators, hyperparams, *problem_args)
 
     if pareto_front:
-        log_trial("logs/poisson_hyperparams.json", problem, operators,
+        log_trial(log_file, problem, operators,
                   problem_args, hyperparams, pareto_front)
 
 

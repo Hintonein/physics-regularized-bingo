@@ -12,7 +12,8 @@
       "differential_weight": 1e-3,
       "check_frequency": 1,
       "min_generations": 1
-    }
+    },
+    "log_file": "logs/poisson_hyperparams.json"
   },
   {
     "problem": "poisson",
@@ -27,7 +28,8 @@
       "differential_weight": 1e-2,
       "check_frequency": 1,
       "min_generations": 1
-    }
+    },
+    "log_file": "logs/poisson_hyperparams.json"
   },
   {
     "problem": "poisson",
@@ -42,7 +44,8 @@
       "differential_weight": 1e-1,
       "check_frequency": 1,
       "min_generations": 1
-    }
+    },
+    "log_file": "logs/poisson_hyperparams.json"
   },
   {
     "problem": "poisson",
@@ -57,7 +60,8 @@
       "differential_weight": 1.0,
       "check_frequency": 1,
       "min_generations": 1
-    }
+    },
+    "log_file": "logs/poisson_hyperparams.json"
   },
   {
     "problem": "poisson",
@@ -72,7 +76,8 @@
       "differential_weight": 1e1,
       "check_frequency": 1,
       "min_generations": 1
-    }
+    },
+    "log_file": "logs/poisson_hyperparams.json"
   },
   {
     "problem": "poisson",
@@ -87,6 +92,7 @@
       "differential_weight": 1e2,
       "check_frequency": 1,
       "min_generations": 1
-    }
+    },
+    "log_file": "logs/poisson_hyperparams.json"
   }
 ]

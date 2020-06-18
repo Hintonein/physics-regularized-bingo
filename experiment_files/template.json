@@ -11,5 +11,6 @@
     "differential_weight": 1.0,
     "check_frequency": 1,
     "min_generations": 1
-  }
+  },
+  "log_file": "logs/log.json"
 }
