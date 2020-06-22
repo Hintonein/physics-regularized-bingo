@@ -3,9 +3,9 @@
   "operators": ["+", "-", "*", "sin", "cos"],
   "problem_args": [3.141592653589793],
   "hyperparams": {
-    "pop_size": 64,
-    "stack_size": 32,
-    "max_generations": 100,
+    "pop_size": 50,
+    "stack_size": 16,
+    "max_generations": 50,
     "fitness_threshold": 1e-6,
     "stagnation_threshold": 100,
     "differential_weight": 1.0,

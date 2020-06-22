@@ -18,9 +18,14 @@ class DifferentialRegression_TF(VectorBasedFunction):
 
         super().__init__(None, metric)
 
-        self.X = tf.convert_to_tensor(X, dtype=tf.float64)
+        self.X = [tf.convert_to_tensor(X[:, i], dtype=tf.float64)
+                  for i in range(X.shape[1])]
+
         self.U = U  # Keep as a numpy array
-        self.X_df = tf.convert_to_tensor(X_df, dtype=tf.float64)
+        self.X_df = [
+            tf.convert_to_tensor(X_df[:, i], dtype=tf.float64)
+            for i in range(X_df.shape[1])
+        ]
 
         self.persistent = df_order > 1
 
@@ -42,10 +47,10 @@ class DifferentialRegression_TF(VectorBasedFunction):
                 node = commands[i, 0]
                 if node == 0:
                     column_idx = commands[i, 1]
-                    tf_stack[i] = X[:, column_idx]
+                    tf_stack[i] = X[column_idx]
                 elif node == 1:
                     const_idx = commands[i, 1]
-                    tf_stack[i] = tf.ones_like(X[:, 0]) * constants[const_idx]
+                    tf_stack[i] = tf.ones_like(X[0]) * constants[const_idx]
                 elif node == 2:
                     t1_idx, t2_idx = commands[i, 1], commands[i, 2]
                     tf_stack[i] = tf_stack[t1_idx] + tf_stack[t2_idx]

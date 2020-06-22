@@ -10,22 +10,19 @@ def analytic_solution(X, k):
 def get_pdefn(k):
 
     def pdefn(X, U, g):
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
-            u_x = U_1[:, 0]
-            u_y = U_1[:, 0]
-            # Manually exit so that these ops don't get added to the tape
-            # This results in a 10-25% speedup
-            g.__exit__(None, None, None)
+        u_x = g.gradient(U, X[0])
+        u_y = g.gradient(U, X[1])
+        # Manually exit so that these ops don't get added to the tape
+        # This results in a 10-25% speedup
+        g.__exit__(None, None, None)
+        if u_x is not None and u_y is not None:
 
-            U_xx = g.gradient(u_x, X)
-            U_yy = g.gradient(u_y, X)
+            u_xx = g.gradient(u_x, X[0])
+            u_yy = g.gradient(u_y, X[1])
 
-            if U_xx is not None and U_yy is not None:
-                u_xx = U_xx[:, 0]
-                u_yy = U_yy[:, 1]
+            if u_xx is not None and u_yy is not None:
 
-                return u_xx + u_yy + 2*k**2*tf.sin(X[:, 0])*tf.sin(X[:, 1])
+                return u_xx + u_yy + 2*(k**2)*tf.sin(X[0])*tf.sin(X[1])
 
         return tf.ones_like(U) * np.inf
 
