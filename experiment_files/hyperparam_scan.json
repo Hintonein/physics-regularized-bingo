@@ -4,7 +4,7 @@
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 120,
+      "pop_size": 480,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -16,14 +16,14 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_mpi4.json"
+    "log_file": "logs/poisson_hyperparams_4.json"
   },
   {
     "problem": "poisson",
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 120,
+      "pop_size": 480,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -35,14 +35,14 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_mpi4.json"
+    "log_file": "logs/poisson_hyperparams_4.json"
   },
   {
     "problem": "poisson",
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 120,
+      "pop_size": 480,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -54,14 +54,14 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_mpi4.json"
+    "log_file": "logs/poisson_hyperparams_4.json"
   },
   {
     "problem": "poisson",
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 120,
+      "pop_size": 480,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -73,14 +73,14 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_mpi4.json"
+    "log_file": "logs/poisson_hyperparams_4.json"
   },
   {
     "problem": "poisson",
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 120,
+      "pop_size": 480,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -92,14 +92,14 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_mpi4.json"
+    "log_file": "logs/poisson_hyperparams_4.json"
   },
   {
     "problem": "poisson",
     "operators": ["+", "-", "*", "sin", "cos"],
     "problem_args": [3.141592653589793],
     "hyperparams": {
-      "pop_size": 120,
+      "pop_size": 480,
       "stack_size": 32,
       "max_generations": 200,
       "fitness_threshold": 1e-6,
@@ -111,6 +111,6 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_mpi4.json"
+    "log_file": "logs/poisson_hyperparams_4.json"
   }
 ]
