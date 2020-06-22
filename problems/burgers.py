@@ -42,15 +42,14 @@ def get_pdefn():
 
     def pdefn(X, U, g):
 
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
+        u_x = g.gradient(U, X[0])
+        u_t = g.gradient(U, X[1])
+        g.__exit__(None, None, None)
+        if u_x is not None and u_t is not None:
 
-            u_x = U_1[:, 0]
-            u_t = U_1[:, 1]
+            u_xx = g.gradient(u_x, X[0])
 
-            U_xx = g.gradient(u_x, X)
-            if U_xx is not None:
-                u_xx = U_xx[:, 0]
+            if u_xx is not None:
                 return u_t + U*u_x - nu*u_xx
 
         return tf.ones_like(U) * np.inf

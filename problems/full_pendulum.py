@@ -6,11 +6,12 @@ from scipy.integrate import solve_ivp
 def get_pdefn(omega):
 
     def pdefn(X, U, g):
-        U_1 = g.gradient(U, X)
-        if U_1 is not None:
-            U_2 = g.gradient(U_1[:, 0], X)
-            if U_2 is not None:
-                return U_2[:, 0] + omega**2 * tf.sin(U)
+        u_t = g.gradient(U, X[0])
+        g.__exit__(None, None, None)
+        if u_t is not None:
+            u_tt = g.gradient(u_t, X[0])
+            if u_tt is not None:
+                return u_tt + omega**2 * tf.sin(U)
 
         return tf.ones_like(U)*np.inf
 

@@ -5,6 +5,7 @@ import problems.poisson
 import problems.linear_advection
 import problems.burgers
 import problems.full_pendulum
+import problems.simple as simple
 
 tf.config.set_visible_devices([], 'GPU')
 
@@ -13,137 +14,37 @@ def get_test(test_name, *args):
     return dispatch[test_name](*args)
 
 
-def format_training_data(bcs, n):
-    x_bcs = np.asarray(
-        bcs[0], dtype=np.float64).reshape((-1, 1))
-    u_bcs = np.asarray(bcs[1], dtype=np.float64).reshape((-1, 1))
-
-    x_df = np.linspace(
-        bcs[0][0], bcs[0][1], n).reshape((-1, 1))[1:-1]
-
-    return x_bcs, u_bcs, x_df
-
-
-def test_constant(c):
-    def odefun(x, u, g):
-        u_x = g.gradient(u, x)
-        if u_x is not None:
-            return c-u_x[:, 0]
-        else:
-            return tf.zeros_like(u)
-
-    # bcs : ((xmin, xmax), (ymin, ymax))
-    bcs = ((0.0, 10.0), (0.0, 20.0))
-    return odefun, bcs
-
-
 def test_linear(m, b):
-    def odefun(x, u, g):
-        u_x = g.gradient(u, x)
-        if u_x is not None:
-            return m*x[:, 0] + b - u_x[:, 0]
-        else:
-            return m*x[:, 0] + b
-    # bcs : ((xmin, xmax), (ymin, ymax))
-    bcs = ((0.0, 10.0), (0.0, 100.0))
-    return odefun, bcs
+    X, U, X_df = simple.linear.get_training_data(m, b)
+
+    pdefn = simple.linear.get_pdefn(m, b)
+
+    return X, U, X_df, pdefn, 1
 
 
 def test_trig():
-    def odefun(x, u, g):
+    X, U, X_df = simple.trig.get_training_data()
 
-        u_x = g.gradient(u, x)
+    pdefn = simple.trig.get_pdefn()
 
-        if u_x is not None:
-            return tf.cos(x)[:, 0] - u_x[:, 0]
-        else:
-            return tf.cos(x)[:, 0]
-
-    # bcs : ((xmin, xmax), (ymin, ymax))
-    bcs = ((0.0, np.pi), (0.0, 0.0))
-    return odefun, bcs
+    return X, U, X_df, pdefn, 1
 
 
 def test_exp(k):
+    X, U, X_df = simple.exp.get_training_data(k)
 
-    def odefun(x, u, g):
-        u_x = g.gradient(u, x)
+    pdefn = simple.exp.get_pdefn(k)
 
-        if u_x is not None:
-            return (u_x[:, 0] - u*k)
-        else:
-            return tf.ones_like(u) * np.inf
-
-    # bcs : ((xmin, xmax), (ymin, ymax))
-    bcs = ((-1, 1), (np.exp(-1*k), np.exp(1*k)))
-
-    return odefun, bcs
+    return X, U, X_df, pdefn, 1
 
 
 def test_shm(omega):
 
-    def odefun(x, u, g):
-        u_x = g.gradient(u, x)
+    X, U, X_df = simple.shm.get_training_data(omega)
 
-        if u_x is not None:
-            u_xx = g.gradient(u_x[:, 0], x)
+    pdefn = simple.shm.get_pdefn(omega)
 
-            if u_xx is not None:
-                return (u_xx[:, 0] + omega**2 * u)
-
-        return tf.ones_like(u) * np.inf  # Disallow constants
-
-    X = np.array([0.05, 0.1])[:, None]
-    U = np.sin(omega * X)
-    X_df = np.linspace(0, 1, 128)[:, None]
-
-    return X, U, X_df, odefun, 2
-
-
-def test_shm_const(omega):
-
-    def odefun(x, u, g):
-        u_x = g.gradient(u, x)
-
-        if u_x is not None:
-            u_xx = g.gradient(u_x[:, 0], x)
-
-            if u_xx is not None:
-                return (u_xx[:, 0] + omega**2 * u)
-
-        return tf.ones_like(u) * np.inf
-
-    X = np.array([0.05, 0.1])[:, None]
-    U = np.sin(omega * X)
-    X_const = np.ones((2, 1)) * omega
-    X = np.hstack([X, X_const])
-    X_df = np.linspace(0, 1, 128)[:, None]
-    X_df_const = np.ones((128, 1)) * omega
-    X_df = np.hstack([X_df, X_df_const])
-
-    return X, U, X_df, odefun, 2
-
-
-def test_shm_dense(omega):
-
-    def odefun(x, u, g):
-        u_x = g.gradient(u, x)
-
-        if u_x is not None:
-            u_xx = g.gradient(u_x[:, 0], x)
-
-            if u_xx is not None:
-                return (u_xx[:, 0] + omega**2 * u)
-
-        return tf.ones_like(u) * np.inf
-
-    X = np.linspace(0, 1, 128)[:, None]
-    U = np.sin(omega * X)
-    X = np.hstack([X, np.ones((128, 1))*omega])
-    X_df = np.linspace(0, 1, 1)[:, None]
-    X_df = np.hstack([X_df,  np.ones((1, 1))*omega])
-
-    return X, U, X_df, odefun, 2
+    return X, U, X_df, pdefn, 2
 
 
 def linear_advection(v):
@@ -218,6 +119,9 @@ def test_poisson(k):
 
 
 dispatch = {
+    "linear": test_linear,
+    "trig": test_trig,
+    "exp": test_exp,
     "shm": test_shm,
     "linear_advection": linear_advection,
     "burgers": test_burgers,

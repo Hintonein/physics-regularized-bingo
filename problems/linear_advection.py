@@ -10,13 +10,11 @@ def analytic_solution(X, v):
 def get_pdefn(v):
 
     def pdefn(X, U, g):
-        U_1 = g.gradient(U, X)
+        g.__exit__(None, None, None)
+        u_x = g.gradient(U, X[0])
+        u_t = g.gradient(U, X[1])
 
-        if U_1 is not None:
-
-            u_x = U_1[:, 0]
-            u_t = U_1[:, 1]
-
+        if u_x is not None and u_t is not None:
             return (u_t + v * u_x)
         else:
             return tf.ones_like(U)*np.inf

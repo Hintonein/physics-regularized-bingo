@@ -1,0 +1,59 @@
+[
+  {
+    "problem": "linear",
+    "operators": ["+", "-", "*"],
+    "problem_args": [2, 3],
+    "hyperparams": {
+      "pop_size": 100,
+      "stack_size": 16,
+      "max_generations": 100,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1.0,
+      "check_frequency": 1,
+      "min_generations": 1,
+      "crossover_rate": 0.4,
+      "mutation_rate": 0.4,
+      "evolution_algorithm": "DeterministicCrowding"
+    },
+    "log_file": "logs/simple_test.json"
+  },
+  {
+    "problem": "trig",
+    "operators": ["+", "-", "*", "cos", "sin"],
+    "problem_args": [],
+    "hyperparams": {
+      "pop_size": 100,
+      "stack_size": 16,
+      "max_generations": 100,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1.0,
+      "check_frequency": 1,
+      "min_generations": 1,
+      "crossover_rate": 0.4,
+      "mutation_rate": 0.4,
+      "evolution_algorithm": "DeterministicCrowding"
+    },
+    "log_file": "logs/simple_test.json"
+  },
+  {
+    "problem": "exp",
+    "operators": ["+", "-", "*", "exp"],
+    "problem_args": [2],
+    "hyperparams": {
+      "pop_size": 100,
+      "stack_size": 16,
+      "max_generations": 100,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1.0,
+      "check_frequency": 1,
+      "min_generations": 1,
+      "crossover_rate": 0.4,
+      "mutation_rate": 0.4,
+      "evolution_algorithm": "DeterministicCrowding"
+    },
+    "log_file": "logs/simple_test.json"
+  }
+]
