@@ -1,0 +1,19 @@
+{
+  "problem": "poisson",
+  "operators": ["*", "+", "-"],
+  "problem_args": [3.141592653589793],
+  "hyperparams": {
+    "pop_size": 512,
+    "stack_size": 32,
+    "max_generations": 500,
+    "fitness_threshold": 1e-6,
+    "stagnation_threshold": 100,
+    "differential_weight": 1.0,
+    "check_frequency": 1,
+    "min_generations": 1,
+    "crossover_rate": 0.4,
+    "mutation_rate": 0.4,
+    "evolution_algorithm": "DeterministicCrowding"
+  },
+  "log_file": "logs/poisson_taylor.json"
+}
