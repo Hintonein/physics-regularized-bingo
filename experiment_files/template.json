@@ -3,14 +3,17 @@
   "operators": ["+", "-", "*", "sin", "cos"],
   "problem_args": [3.141592653589793],
   "hyperparams": {
-    "pop_size": 125,
+    "pop_size": 64,
     "stack_size": 32,
-    "max_generations": 200,
+    "max_generations": 100,
     "fitness_threshold": 1e-6,
     "stagnation_threshold": 100,
     "differential_weight": 1.0,
     "check_frequency": 1,
-    "min_generations": 1
+    "min_generations": 1,
+    "crossover_rate": 0.4,
+    "mutation_rate": 0.4,
+    "evolution_algorithm": "DeterministicCrowding"
   },
   "log_file": "logs/log.json"
 }

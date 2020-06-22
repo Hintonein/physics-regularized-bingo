@@ -20,6 +20,7 @@ from bingo.symbolic_regression.agraph.component_generator import ComponentGenera
 from differential_regression import DifferentialRegression_TF
 
 from bingo.evolutionary_algorithms.deterministic_crowding import DeterministicCrowdingEA
+from bingo.evolutionary_algorithms.age_fitness import AgeFitnessEA
 from bingo.evolutionary_optimizers.parallel_archipelago import ParallelArchipelago
 from bingo.evaluation.evaluation import Evaluation
 from bingo.evolutionary_optimizers.island import Island
@@ -41,7 +42,10 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
     stagnation_threshold = hyperparams["stagnation_threshold"]
     check_frequency = hyperparams["check_frequency"]
     differential_weight = hyperparams["differential_weight"]
-    min_generations = 1
+    crossover_rate = hyperparams["crossover_rate"]
+    mutation_rate = hyperparams["mutation_rate"]
+    evolution_algorithm = hyperparams["evolution_algorithm"]
+    min_generations = hyperparams["min_generations"]
 
     communicator = MPI.COMM_WORLD
     rank = MPI.COMM_WORLD.Get_rank()
@@ -68,7 +72,12 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
         fitness, algorithm='Nelder-Mead')
     evaluator = Evaluation(local_opt_fitness)
 
-    ea = DeterministicCrowdingEA(evaluator, crossover, mutation, 0.4, 0.4)
+    if evolution_algorithm == "DeterministicCrowding":
+        ea = DeterministicCrowdingEA(
+            evaluator, crossover, mutation, crossover_rate, mutation_rate)
+    elif evolution_algorithm == "AgeFitness":
+        ea = AgeFitnessEA(evaluator, agraph_generator, crossover, mutation,
+                          crossover_rate, mutation_rate, pop_size)
 
     island = Island(ea, agraph_generator, pop_size)
 
@@ -87,9 +96,9 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
         print(optim_result)
         print("Generation: ", archipelago.generational_age)
         print_pareto_front(pareto_front)
-        return archipelago, pareto_front
+        return archipelago, pareto_front, optim_result
     else:
-        return None, None
+        return None, None, None
 
 
 def main(experiment_params):
@@ -99,12 +108,12 @@ def main(experiment_params):
     operators = experiment_params["operators"]
     problem_args = experiment_params["problem_args"]
 
-    _, pareto_front = solve_diffeq_gpsr(
+    _, pareto_front, result = solve_diffeq_gpsr(
         problem, operators, hyperparams, *problem_args)
 
     if pareto_front:
         log_trial(log_file, problem, operators,
-                  problem_args, hyperparams, pareto_front)
+                  problem_args, hyperparams, pareto_front, result)
 
 
 if __name__ == '__main__':

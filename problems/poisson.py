@@ -14,6 +14,9 @@ def get_pdefn(k):
         if U_1 is not None:
             u_x = U_1[:, 0]
             u_y = U_1[:, 0]
+            # Manually exit so that these ops don't get added to the tape
+            # This results in a 10-25% speedup
+            g.__exit__(None, None, None)
 
             U_xx = g.gradient(u_x, X)
             U_yy = g.gradient(u_y, X)

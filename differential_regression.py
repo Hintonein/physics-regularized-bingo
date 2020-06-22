@@ -101,10 +101,13 @@ class DifferentialRegression_TF(VectorBasedFunction):
 
                 U_df = tf_graph_function(self.X_df)
 
-                error_df = self.df_err(self.X_df, U_df, g).numpy()
+                error_df = self.df_err(self.X_df, U_df, g)
 
-            # g is not cleaned up automatically if set it as persistent
+            # g is not cleaned up automatically if persistent=True
             del g
+
+            # Make sure we do things off the tape
+            error_df = error_df.numpy()
 
             fitness = self._metric(error_fit) + \
                 self.differential_weight * self._metric(error_df)
