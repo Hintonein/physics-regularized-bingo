@@ -66,7 +66,9 @@ def evaluate_equation_sympy(equation_str, X, U):
     if len(expr.free_symbols) < X.shape[1]:
         l = list(expr.free_symbols)
         # TODO: Generalize above 2D
-        if l[0].name == "X_0":
+        if len(l) == 0:  # Constant solution
+            return f()
+        elif l[0].name == "X_0":
             U_hat = f(X[:, 0])
         else:
             U_hat = f(X[:, 1])

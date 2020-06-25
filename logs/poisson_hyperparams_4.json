@@ -1,1 +1,197 @@
-[{"git_hash": "", "problem": "poisson", "result": 1, "problem_args": [3.141592653589793], "hyperparams": {"pop_size": 480, "stack_size": 32, "max_generations": 200, "fitness_threshold": 1e-06, "stagnation_threshold": 100, "differential_weight": 1.0, "check_frequency": 1, "min_generations": 1, "crossover_rate": 0.4, "mutation_rate": 0.4, "evolution_algorithm": "DeterministicCrowding"}, "operators": ["+", "-", "*", "sin", "cos"], "pareto_front": [{"complexity": 11, "fitness": 1.0265854268385772, "equation": "sin((X_1)(cos(X_1) + X_0 + X_0)) - (X_0 - (sin(X_0 + X_0) - (X_1)))"}, {"complexity": 9, "fitness": 1.3286571341999158, "equation": "(X_0)(sin(sin((X_0)(X_1) + X_1)) - (((X_0)(X_1) + X_1)(X_0)))"}, {"complexity": 8, "fitness": 1.3340012006612991, "equation": "((X_0 + X_0)(X_1))(cos(X_0) - (X_0))"}, {"complexity": 7, "fitness": 1.664025969227861, "equation": "(X_0 - ((X_0)(X_0)) - (((X_0)(X_0))(X_0)))(X_1)"}, {"complexity": 6, "fitness": 2.1294226782074026, "equation": "sin((X_0)(X_1 + X_1) + X_0)"}, {"complexity": 5, "fitness": 2.833757797047024, "equation": "(X_0)(cos(X_0) - ((X_0)(X_0)))"}, {"complexity": 4, "fitness": 3.031413485377072, "equation": "X_0 - ((X_0)((X_0)(X_0)))"}, {"complexity": 3, "fitness": 3.7956394874932515, "equation": "sin(X_0 + X_0)"}, {"complexity": 2, "fitness": 5.4784971468277535, "equation": "sin(X_0)"}, {"complexity": 1, "fitness": Infinity, "equation": "X_1"}]}, {"git_hash": "", "problem": "poisson", "result": 2, "problem_args": [3.141592653589793], "hyperparams": {"pop_size": 480, "stack_size": 32, "max_generations": 200, "fitness_threshold": 1e-06, "stagnation_threshold": 100, "differential_weight": 0.1, "check_frequency": 1, "min_generations": 1, "crossover_rate": 0.4, "mutation_rate": 0.4, "evolution_algorithm": "DeterministicCrowding"}, "operators": ["+", "-", "*", "sin", "cos"], "pareto_front": [{"complexity": 7, "fitness": 0.35398930169015974, "equation": "(cos((X_1)(X_0)) - ((X_0)(X_0)))((X_1)(X_0))"}, {"complexity": 6, "fitness": 0.44151460746278326, "equation": "((X_0)(cos(X_0) - (X_0)))(X_1)"}, {"complexity": 5, "fitness": 0.45563805800719903, "equation": "sin((X_0)(X_0)) - (((X_0)(X_0))(X_0))"}, {"complexity": 4, "fitness": 0.4660641752058474, "equation": "(X_0 - ((X_0)(X_0)))((X_0)(X_0))"}, {"complexity": 3, "fitness": 0.5297784771748651, "equation": "X_0 - ((X_0)(X_0))"}, {"complexity": 2, "fitness": 1.049110554131521, "equation": "sin(X_0)"}, {"complexity": 1, "fitness": Infinity, "equation": "X_1"}]}, {"git_hash": "", "problem": "poisson", "result": 2, "problem_args": [3.141592653589793], "hyperparams": {"pop_size": 480, "stack_size": 32, "max_generations": 200, "fitness_threshold": 1e-06, "stagnation_threshold": 100, "differential_weight": 0.01, "check_frequency": 1, "min_generations": 1, "crossover_rate": 0.4, "mutation_rate": 0.4, "evolution_algorithm": "DeterministicCrowding"}, "operators": ["+", "-", "*", "sin", "cos"], "pareto_front": [{"complexity": 13, "fitness": 0.04955125710015133, "equation": "(cos(cos(sin(7464.424144760551))) - (cos(X_1)))((X_1)(((X_0)(X_0))((X_0)(X_0)) - (X_0)))"}, {"complexity": 12, "fitness": 0.052084704380628455, "equation": "(((X_0)(X_0))((X_0)(X_0)))(((X_1)(((sin(((X_0)(X_0))((X_0)(X_0))))(((X_0)(X_0))((X_0)(X_0))))(X_0 - ((X_0)(X_0)))))(cos(X_1)))"}, {"complexity": 11, "fitness": 0.0523866011270525, "equation": "((((X_0)(X_0))((X_0)(X_0)))(((X_0)(X_0))((X_0)(X_0))) + (((X_0)(X_0))((X_0)(X_0)))((((X_0)(X_0))((X_0)(X_0)))(((X_0)(X_0))((X_0)(X_0)))))((-0.015719031377090166)(sin((((X_0)(X_0))((X_0)(X_0)))((((X_0)(X_0))((X_0)(X_0)))(((X_0)(X_0))((X_0)(X_0)))) - (((X_0)(X_0))((X_0)(X_0))))))"}, {"complexity": 10, "fitness": 0.05258063471815119, "equation": "((((sin((X_0)(X_0)))(sin((X_0)(X_0))) - (((sin((X_0)(X_0)))(sin((X_0)(X_0))))(X_0 - ((X_0)(X_0)))))((X_0)(X_0)))(((sin((X_0)(X_0)))(sin((X_0)(X_0))))(X_0 - ((X_0)(X_0)))))(((sin((X_0)(X_0)))(sin((X_0)(X_0))) - (((sin((X_0)(X_0)))(sin((X_0)(X_0))))(X_0 - ((X_0)(X_0)))))((X_0)(X_0)))"}, {"complexity": 9, "fitness": 0.05263846350591552, "equation": "((((X_0)(X_0))(X_0))(((X_0)(X_0))(X_0)) - ((((X_0)(X_0))(X_0))(X_0)))(sin(((X_0)(X_0))(X_0)) - (((X_0)(X_0))(X_0)))"}, {"complexity": 8, "fitness": 0.05333524427304561, "equation": "(((X_0)(X_0))(cos((14.197604923644013)((X_0)(X_0)))))(0.002442441250574789)"}, {"complexity": 7, "fitness": 0.05346142588048313, "equation": "((X_1)((X_0)(X_0) - (X_0)) - ((X_0)(X_0) - (X_0)))((X_1)((X_0)(X_0) - (X_0)))"}, {"complexity": 6, "fitness": 0.0535415207302261, "equation": "(sin((-2375.0440461138837)(X_1)))((-2375.0440461138837)(sin((-2375.0440461138837)(X_1))))"}, {"complexity": 4, "fitness": 0.0535415207370188, "equation": "sin((-8510.57449857476)(X_1))"}, {"complexity": 3, "fitness": 0.13953410498052032, "equation": "sin(X_0) - (X_0)"}, {"complexity": 2, "fitness": 0.6093954546142069, "equation": "sin(X_0)"}, {"complexity": 1, "fitness": Infinity, "equation": "-3733.001101382949"}]}]
+[
+  {
+    "git_hash": "",
+    "problem": "poisson",
+    "result": 1,
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 480,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 1.0,
+      "check_frequency": 1,
+      "min_generations": 1,
+      "crossover_rate": 0.4,
+      "mutation_rate": 0.4,
+      "evolution_algorithm": "DeterministicCrowding"
+    },
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "pareto_front": [
+      {
+        "complexity": 11,
+        "fitness": 1.0265854268385772,
+        "equation": "sin((X_1)(cos(X_1) + X_0 + X_0)) - (X_0 - (sin(X_0 + X_0) - (X_1)))"
+      },
+      {
+        "complexity": 9,
+        "fitness": 1.3286571341999158,
+        "equation": "(X_0)(sin(sin((X_0)(X_1) + X_1)) - (((X_0)(X_1) + X_1)(X_0)))"
+      },
+      {
+        "complexity": 8,
+        "fitness": 1.3340012006612991,
+        "equation": "((X_0 + X_0)(X_1))(cos(X_0) - (X_0))"
+      },
+      {
+        "complexity": 7,
+        "fitness": 1.664025969227861,
+        "equation": "(X_0 - ((X_0)(X_0)) - (((X_0)(X_0))(X_0)))(X_1)"
+      },
+      {
+        "complexity": 6,
+        "fitness": 2.1294226782074026,
+        "equation": "sin((X_0)(X_1 + X_1) + X_0)"
+      },
+      {
+        "complexity": 5,
+        "fitness": 2.833757797047024,
+        "equation": "(X_0)(cos(X_0) - ((X_0)(X_0)))"
+      },
+      {
+        "complexity": 4,
+        "fitness": 3.031413485377072,
+        "equation": "X_0 - ((X_0)((X_0)(X_0)))"
+      },
+      {
+        "complexity": 3,
+        "fitness": 3.7956394874932515,
+        "equation": "sin(X_0 + X_0)"
+      },
+      {
+        "complexity": 2,
+        "fitness": 5.4784971468277535,
+        "equation": "sin(X_0)"
+      },
+      { "complexity": 1, "fitness": Infinity, "equation": "X_1" }
+    ]
+  },
+  {
+    "git_hash": "",
+    "problem": "poisson",
+    "result": 2,
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 480,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 0.1,
+      "check_frequency": 1,
+      "min_generations": 1,
+      "crossover_rate": 0.4,
+      "mutation_rate": 0.4,
+      "evolution_algorithm": "DeterministicCrowding"
+    },
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "pareto_front": [
+      {
+        "complexity": 7,
+        "fitness": 0.35398930169015974,
+        "equation": "(cos((X_1)(X_0)) - ((X_0)(X_0)))((X_1)(X_0))"
+      },
+      {
+        "complexity": 6,
+        "fitness": 0.44151460746278326,
+        "equation": "((X_0)(cos(X_0) - (X_0)))(X_1)"
+      },
+      {
+        "complexity": 5,
+        "fitness": 0.45563805800719903,
+        "equation": "sin((X_0)(X_0)) - (((X_0)(X_0))(X_0))"
+      },
+      {
+        "complexity": 4,
+        "fitness": 0.4660641752058474,
+        "equation": "(X_0 - ((X_0)(X_0)))((X_0)(X_0))"
+      },
+      {
+        "complexity": 3,
+        "fitness": 0.5297784771748651,
+        "equation": "X_0 - ((X_0)(X_0))"
+      },
+      { "complexity": 2, "fitness": 1.049110554131521, "equation": "sin(X_0)" },
+      { "complexity": 1, "fitness": Infinity, "equation": "X_1" }
+    ]
+  },
+  {
+    "git_hash": "",
+    "problem": "poisson",
+    "result": 2,
+    "problem_args": [3.141592653589793],
+    "hyperparams": {
+      "pop_size": 480,
+      "stack_size": 32,
+      "max_generations": 200,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 100,
+      "differential_weight": 0.01,
+      "check_frequency": 1,
+      "min_generations": 1,
+      "crossover_rate": 0.4,
+      "mutation_rate": 0.4,
+      "evolution_algorithm": "DeterministicCrowding"
+    },
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "pareto_front": [
+      {
+        "complexity": 13,
+        "fitness": 0.04955125710015133,
+        "equation": "(cos(cos(sin(7464.424144760551))) - (cos(X_1)))((X_1)(((X_0)(X_0))((X_0)(X_0)) - (X_0)))"
+      },
+      {
+        "complexity": 12,
+        "fitness": 0.052084704380628455,
+        "equation": "(((X_0)(X_0))((X_0)(X_0)))(((X_1)(((sin(((X_0)(X_0))((X_0)(X_0))))(((X_0)(X_0))((X_0)(X_0))))(X_0 - ((X_0)(X_0)))))(cos(X_1)))"
+      },
+      {
+        "complexity": 11,
+        "fitness": 0.0523866011270525,
+        "equation": "((((X_0)(X_0))((X_0)(X_0)))(((X_0)(X_0))((X_0)(X_0))) + (((X_0)(X_0))((X_0)(X_0)))((((X_0)(X_0))((X_0)(X_0)))(((X_0)(X_0))((X_0)(X_0)))))((-0.015719031377090166)(sin((((X_0)(X_0))((X_0)(X_0)))((((X_0)(X_0))((X_0)(X_0)))(((X_0)(X_0))((X_0)(X_0)))) - (((X_0)(X_0))((X_0)(X_0))))))"
+      },
+      {
+        "complexity": 10,
+        "fitness": 0.05258063471815119,
+        "equation": "((((sin((X_0)(X_0)))(sin((X_0)(X_0))) - (((sin((X_0)(X_0)))(sin((X_0)(X_0))))(X_0 - ((X_0)(X_0)))))((X_0)(X_0)))(((sin((X_0)(X_0)))(sin((X_0)(X_0))))(X_0 - ((X_0)(X_0)))))(((sin((X_0)(X_0)))(sin((X_0)(X_0))) - (((sin((X_0)(X_0)))(sin((X_0)(X_0))))(X_0 - ((X_0)(X_0)))))((X_0)(X_0)))"
+      },
+      {
+        "complexity": 9,
+        "fitness": 0.05263846350591552,
+        "equation": "((((X_0)(X_0))(X_0))(((X_0)(X_0))(X_0)) - ((((X_0)(X_0))(X_0))(X_0)))(sin(((X_0)(X_0))(X_0)) - (((X_0)(X_0))(X_0)))"
+      },
+      {
+        "complexity": 8,
+        "fitness": 0.05333524427304561,
+        "equation": "(((X_0)(X_0))(cos((14.197604923644013)((X_0)(X_0)))))(0.002442441250574789)"
+      },
+      {
+        "complexity": 7,
+        "fitness": 0.05346142588048313,
+        "equation": "((X_1)((X_0)(X_0) - (X_0)) - ((X_0)(X_0) - (X_0)))((X_1)((X_0)(X_0) - (X_0)))"
+      },
+      {
+        "complexity": 6,
+        "fitness": 0.0535415207302261,
+        "equation": "(sin((-2375.0440461138837)(X_1)))((-2375.0440461138837)(sin((-2375.0440461138837)(X_1))))"
+      },
+      {
+        "complexity": 4,
+        "fitness": 0.0535415207370188,
+        "equation": "sin((-8510.57449857476)(X_1))"
+      },
+      {
+        "complexity": 3,
+        "fitness": 0.13953410498052032,
+        "equation": "sin(X_0) - (X_0)"
+      },
+      {
+        "complexity": 2,
+        "fitness": 0.6093954546142069,
+        "equation": "sin(X_0)"
+      },
+      { "complexity": 1, "fitness": Infinity, "equation": "-3733.001101382949" }
+    ]
+  }
+]
