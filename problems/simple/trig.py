@@ -3,7 +3,7 @@ import tensorflow as tf
 
 
 def analytic_solution(X):
-    return np.sin(X[:, 0])
+    return np.sin(X)
 
 
 def get_pdefn():

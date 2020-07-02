@@ -5,8 +5,10 @@ import problems.poisson
 import problems.linear_advection
 import problems.burgers
 import problems.full_pendulum
-import problems.simple as simple
-
+import problems.simple.linear as linear
+import problems.simple.trig as trig
+import problems.simple.exp as simple_exp
+import problems.simple.shm as shm
 tf.config.set_visible_devices([], 'GPU')
 
 
@@ -15,34 +17,34 @@ def get_test(test_name, *args):
 
 
 def test_linear(m, b):
-    X, U, X_df = simple.linear.get_training_data(m, b)
+    X, U, X_df = linear.get_training_data(m, b)
 
-    pdefn = simple.linear.get_pdefn(m, b)
+    pdefn = linear.get_pdefn(m, b)
 
     return X, U, X_df, pdefn, 1
 
 
 def test_trig():
-    X, U, X_df = simple.trig.get_training_data()
+    X, U, X_df = trig.get_training_data()
 
-    pdefn = simple.trig.get_pdefn()
+    pdefn = trig.get_pdefn()
 
     return X, U, X_df, pdefn, 1
 
 
 def test_exp(k):
-    X, U, X_df = simple.exp.get_training_data(k)
+    X, U, X_df = simple_exp.get_training_data(k)
 
-    pdefn = simple.exp.get_pdefn(k)
+    pdefn = simple_exp.get_pdefn(k)
 
     return X, U, X_df, pdefn, 1
 
 
 def test_shm(omega):
 
-    X, U, X_df = simple.shm.get_training_data(omega)
+    X, U, X_df = shm.get_training_data(omega)
 
-    pdefn = simple.shm.get_pdefn(omega)
+    pdefn = shm.get_pdefn(omega)
 
     return X, U, X_df, pdefn, 2
 

@@ -3,7 +3,7 @@ import tensorflow as tf
 
 
 def analytic_solution(X, omega):
-    return np.sin(X[:, 0]*omega)
+    return np.sin(X * omega)
 
 
 def get_pdefn(omega):
@@ -25,7 +25,7 @@ def get_pdefn(omega):
 
 def get_training_data(omega, low=0, high=1, n_df=128):
 
-    X_boundary = np.array([low, high])
+    X_boundary = np.array([low, high])[:, None]
     U_boundary = analytic_solution(X_boundary, omega)
 
     X_df = np.linspace(low, high, n_df)[:, None]

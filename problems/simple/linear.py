@@ -3,7 +3,7 @@ import tensorflow as tf
 
 
 def analytic_solution(X, m, b):
-    return (X[:, 0]**2)*m + b
+    return (X**2) * m + b
 
 
 def get_pdefn(m, b):
@@ -13,7 +13,7 @@ def get_pdefn(m, b):
         u_x = g.gradient(U, X[0])
 
         if u_x is not None:
-            return m*X[0] + b - u_x
+            return m * X[0] + b - u_x
         else:
             return tf.ones_like(U) * np.inf
 
