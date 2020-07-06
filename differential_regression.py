@@ -50,7 +50,11 @@ class DifferentialRegression_TF(VectorBasedFunction):
                     tf_stack[i] = X[column_idx]
                 elif node == 1:
                     const_idx = commands[i, 1]
-                    tf_stack[i] = tf.ones_like(X[0]) * constants[const_idx]
+                    # IMPORTANT: We need to first create the constant using numpy
+                    # and then convert to tensor to avoid a memory leak. This bypasses
+                    # one of tensorflows caching mechanisms for constants which causes the leak.
+                    tf_stack[i] = tf.convert_to_tensor(
+                        np.ones_like(X[0]) * constants[const_idx])
                 elif node == 2:
                     t1_idx, t2_idx = commands[i, 1], commands[i, 2]
                     tf_stack[i] = tf_stack[t1_idx] + tf_stack[t2_idx]

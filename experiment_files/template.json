@@ -15,5 +15,7 @@
     "mutation_rate": 0.4,
     "evolution_algorithm": "DeterministicCrowding"
   },
-  "log_file": "logs/log.json"
+  "result_file": "results/log.json",
+  "log_file": "logs/log",
+  "checkpoint_file": "checkpoints/check"
 }

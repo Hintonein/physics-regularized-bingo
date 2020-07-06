@@ -13,7 +13,7 @@ def get_pdefn(m, b):
         u_x = g.gradient(U, X[0])
 
         if u_x is not None:
-            return m * X[0] + b - u_x
+            return m * 2 * X[0] + b - u_x
         else:
             return tf.ones_like(U) * np.inf
 

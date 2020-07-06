@@ -8,6 +8,7 @@ from mpi4py import MPI
 from test_problems import get_test
 import sys
 import json
+import logging
 
 from helper_funcs import *
 
@@ -32,7 +33,7 @@ def agraph_similarity(ag_1, ag_2):
     return ag_1.fitness == ag_2.fitness and ag_1.get_complexity() == ag_2.get_complexity()
 
 
-def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
+def solve_diffeq_gpsr(test_name, operators, hyperparams, checkpoint_file, *args):
     # evolve the population
 
     pop_size = hyperparams["pop_size"]
@@ -47,7 +48,6 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
     evolution_algorithm = hyperparams["evolution_algorithm"]
     min_generations = hyperparams["min_generations"]
 
-    communicator = MPI.COMM_WORLD
     rank = MPI.COMM_WORLD.Get_rank()
 
     # rank 0 generates the data to be fitted
@@ -90,7 +90,7 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
     # go do the evolution and send back the best equations
     optim_result = archipelago.evolve_until_convergence(max_generations, fitness_threshold,
                                                         convergence_check_frequency=check_frequency, min_generations=min_generations,
-                                                        stagnation_generations=stagnation_threshold, checkpoint_base_name='checkpoint', num_checkpoints=0)
+                                                        stagnation_generations=stagnation_threshold, checkpoint_base_name=checkpoint_file, num_checkpoints=2)
 
     if rank == 0:
         print(optim_result)
@@ -102,17 +102,24 @@ def solve_diffeq_gpsr(test_name, operators, hyperparams, *args):
 
 
 def main(experiment_params):
+    rank = MPI.COMM_WORLD.Get_rank()
+
     log_file = experiment_params["log_file"]
+    result_file = experiment_params["result_file"]
+    checkpoint_file = experiment_params["checkpoint_file"]
     problem = experiment_params["problem"]
     hyperparams = experiment_params["hyperparams"]
     operators = experiment_params["operators"]
     problem_args = experiment_params["problem_args"]
 
+    logging.basicConfig(filename=f"{log_file}_{rank}.log",
+                        filemode="a", level=logging.INFO)
+
     _, pareto_front, result = solve_diffeq_gpsr(
-        problem, operators, hyperparams, *problem_args)
+        problem, operators, hyperparams, checkpoint_file, *problem_args)
 
     if pareto_front:
-        log_trial(log_file, problem, operators,
+        log_trial(result_file, problem, operators,
                   problem_args, hyperparams, pareto_front, result)
 
 

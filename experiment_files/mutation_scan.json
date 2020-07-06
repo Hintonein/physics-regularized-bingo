@@ -16,7 +16,9 @@
       "mutation_rate": 0.2,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/mutation.json"
+    "result_file": "results/mutation.json",
+    "log_file": "logs/mutation_a0",
+    "checkpoint_file": "checkpoints/mutation_a0"
   },
   {
     "problem": "poisson",
@@ -35,7 +37,9 @@
       "mutation_rate": 0.6,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/mutation.json"
+    "result_file": "results/mutation.json",
+    "log_file": "logs/mutation_a1",
+    "checkpoint_file": "checkpoints/mutation_a1"
   },
   {
     "problem": "poisson",
@@ -54,7 +58,9 @@
       "mutation_rate": 0.8,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/mutation.json"
+    "result_file": "results/mutation.json",
+    "log_file": "logs/mutation_a2",
+    "checkpoint_file": "checkpoints/mutation_a2"
   },
   {
     "problem": "poisson",
@@ -73,7 +79,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/mutation.json"
+    "result_file": "results/mutation.json",
+    "log_file": "logs/mutation_a3",
+    "checkpoint_file": "checkpoints/mutation_a3"
   },
   {
     "problem": "poisson",
@@ -92,6 +100,8 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/mutation.json"
+    "result_file": "results/mutation.json",
+    "log_file": "logs/mutation_a4",
+    "checkpoint_file": "checkpoints/mutation_a4"
   }
 ]

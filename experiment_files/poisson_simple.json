@@ -5,9 +5,9 @@
   "hyperparams": {
     "pop_size": 512,
     "stack_size": 32,
-    "max_generations": 512,
+    "max_generations": 1024,
     "fitness_threshold": 1e-6,
-    "stagnation_threshold": 128,
+    "stagnation_threshold": 512,
     "differential_weight": 1.0,
     "check_frequency": 1,
     "min_generations": 1,
@@ -15,5 +15,7 @@
     "mutation_rate": 0.4,
     "evolution_algorithm": "DeterministicCrowding"
   },
-  "log_file": "logs/poisson_simple.json"
+  "result_file": "results/poisson_simple.json",
+  "log_file": "logs/poisson_simple",
+  "checkpoint_file": "checkpoints/poisson_simple"
 }

@@ -16,7 +16,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_4.json"
+    "result_file": "results/poisson_hyperparams_4.json",
+    "log_file": "logs/poisson_hyperparams_4_a0",
+    "checkpoint_file": "checkpoints/poisson_hyperparams_4_a0"
   },
   {
     "problem": "poisson",
@@ -35,7 +37,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_4.json"
+    "result_file": "results/poisson_hyperparams_4.json",
+    "log_file": "logs/poisson_hyperparams_4_a1",
+    "checkpoint_file": "checkpoints/poisson_hyperparams_4_a1"
   },
   {
     "problem": "poisson",
@@ -54,7 +58,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_4.json"
+    "result_file": "results/poisson_hyperparams_4.json",
+    "log_file": "logs/poisson_hyperparams_4_a2",
+    "checkpoint_file": "checkpoints/poisson_hyperparams_4_a2"
   },
   {
     "problem": "poisson",
@@ -73,7 +79,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_4.json"
+    "result_file": "results/poisson_hyperparams_4.json",
+    "log_file": "logs/poisson_hyperparams_4_a3",
+    "checkpoint_file": "checkpoints/poisson_hyperparams_4_a3"
   },
   {
     "problem": "poisson",
@@ -92,7 +100,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_4.json"
+    "result_file": "results/poisson_hyperparams_4.json",
+    "log_file": "logs/poisson_hyperparams_4_a4",
+    "checkpoint_file": "checkpoints/poisson_hyperparams_4_a4"
   },
   {
     "problem": "poisson",
@@ -111,6 +121,8 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/poisson_hyperparams_4.json"
+    "result_file": "results/poisson_hyperparams_4.json",
+    "log_file": "logs/poisson_hyperparams_4_a5",
+    "checkpoint_file": "checkpoints/poisson_hyperparams_4_a5"
   }
 ]

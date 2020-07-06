@@ -15,5 +15,7 @@
     "mutation_rate": 0.4,
     "evolution_algorithm": "DeterministicCrowding"
   },
-  "log_file": "logs/poisson_taylor.json"
+  "result_file": "results/poisson_taylor.json",
+  "log_file": "logs/poisson_taylor",
+  "checkpoint_file": "checkpoints/poisson_taylor"
 }

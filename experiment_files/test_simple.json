@@ -16,7 +16,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/simple_test.json"
+    "result_file": "results/simple_test.json",
+    "log_file": "logs/linear",
+    "checkpoint_file": "checkpoints/linear"
   },
   {
     "problem": "trig",
@@ -35,7 +37,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/simple_test.json"
+    "result_file": "results/simple_test.json",
+    "log_file": "logs/trig",
+    "checkpoint_file": "checkpoints/trig"
   },
   {
     "problem": "exp",
@@ -54,7 +58,9 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/simple_test.json"
+    "result_file": "results/simple_test.json",
+    "log_file": "logs/exp",
+    "checkpoint_file": "checkpoints/exp"
   },
   {
     "problem": "shm",
@@ -73,6 +79,8 @@
       "mutation_rate": 0.4,
       "evolution_algorithm": "DeterministicCrowding"
     },
-    "log_file": "logs/simple_test.json"
+    "result_file": "results/simple_test.json",
+    "log_file": "logs/shm",
+    "checkpoint_file": "checkpoints/shm"
   }
 ]
