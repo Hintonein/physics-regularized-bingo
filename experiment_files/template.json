@@ -5,7 +5,7 @@
   "hyperparams": {
     "pop_size": 512,
     "stack_size": 16,
-    "max_generations": 1024,
+    "max_generations": 700,
     "fitness_threshold": 1e-6,
     "stagnation_threshold": 512,
     "differential_weight": 1.0,
