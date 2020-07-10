@@ -1,7 +1,7 @@
 import numpy as np
 from problems.data_generation_helpers import load_mat_2d, ungrid_u_2d, get_u_const_idx_2d, random_choice
 import os
-import tensorflow as tf
+import torch
 
 
 def load_data():
@@ -16,7 +16,7 @@ def get_training_data(n_df=10000):
 
     X_initial, U_initial = get_u_const_idx_2d(x, t, u, idx_2=0)
     X_bottom, U_bottom = get_u_const_idx_2d(x, t, u, idx_1=0)
-    X_top, U_top = get_u_const_idx_2d(x, t, u, idx_1=x.shape[0]-1)
+    X_top, U_top = get_u_const_idx_2d(x, t, u, idx_1=x.shape[0] - 1)
 
     X_boundary = np.vstack([X_initial, X_bottom, X_top])
     U_boundary = np.vstack([U_initial, U_bottom, U_top])
@@ -40,18 +40,21 @@ def get_test_data():
 def get_pdefn():
     nu = 0.01 / np.pi
 
-    def pdefn(X, U, g):
+    def pdefn(X, U):
 
-        u_x = g.gradient(U, X[0])
-        u_t = g.gradient(U, X[1])
-        g.__exit__(None, None, None)
-        if u_x is not None and u_t is not None:
+        if U.grad_fn is not None:
 
-            u_xx = g.gradient(u_x, X[0])
+            u_x = torch.autograd.grad(
+                U.sum(), X[0], create_graph=True, allow_unused=True)[0]
+            u_t = torch.autograd.grad(
+                U.sum(), X[1], create_graph=True, allow_unused=True)[0]
+            if u_x is not None and u_t is not None:
 
-            if u_xx is not None:
-                return u_t + U*u_x - nu*u_xx
+                u_xx = torch.autograd.grad(u_x, X[0], allow_unused=True)[0]
 
-        return tf.ones_like(U) * np.inf
+                if u_xx is not None:
+                    return u_t + U * u_x - nu * u_xx
+
+        return torch.ones_like(U) * np.inf
 
     return pdefn

@@ -1,5 +1,5 @@
 import numpy as np
-import tensorflow as tf
+import torch
 
 
 def analytic_solution(X, omega):
@@ -8,17 +8,18 @@ def analytic_solution(X, omega):
 
 def get_pdefn(omega):
 
-    def pdefn(X, U, g):
+    def pdefn(X, U):
 
-        u_t = g.gradient(U, X[0])
-        g.__exit__(None, None, None)
-        if u_t is not None:
-            u_tt = g.gradient(u_t, X[0])
+        if U.grad_fn is not None:
+            u_t = torch.autograd.grad(U.sum(), X[0], create_graph=True)[0]
+            if u_t is not None and u_t.grad_fn is not None:
+                u_tt = torch.autograd.grad(
+                    u_t.sum(), X[0], allow_unused=True)[0]
 
-            if u_tt is not None:
-                return u_tt + omega**2 * U
+                if u_tt is not None:
+                    return u_tt + omega**2 * U
 
-        return tf.ones_like(U) * np.inf
+        return torch.ones_like(U) * np.inf
 
     return pdefn
 

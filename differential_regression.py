@@ -1,10 +1,8 @@
-import tensorflow as tf
+import torch
 
 import numpy as np
 
 from bingo.evaluation.fitness_function import VectorBasedFunction
-
-tf.config.set_visible_devices([], 'GPU')
 
 
 class DifferentialRegression_TF(VectorBasedFunction):
@@ -18,112 +16,102 @@ class DifferentialRegression_TF(VectorBasedFunction):
 
         super().__init__(None, metric)
 
-        self.X = [tf.convert_to_tensor(X[:, i], dtype=tf.float64)
+        self.X = [torch.tensor(X[:, i], dtype=torch.float32)
                   for i in range(X.shape[1])]
 
         self.U = U  # Keep as a numpy array
         self.X_df = [
-            tf.convert_to_tensor(X_df[:, i], dtype=tf.float64)
+            torch.tensor(X_df[:, i], dtype=torch.float32)
             for i in range(X_df.shape[1])
         ]
-
-        self.persistent = df_order > 1
+        for X in self.X_df:
+            X.requires_grad = True
 
         self.differential_weight = differential_weight
         self.detect_const_solutions = detect_const_solutions
 
         self.df_err = df_err
 
-    def build_tf_graph_from_agraph(self, individual):
+    def build_torch_graph_from_agraph(self, individual):
 
         commands = individual._short_command_array
         constants = individual.constants
 
         def evaluate(X):
-            tf_stack = [None] * commands.shape[0]
+            ad_stack = [None] * commands.shape[0]
 
             for i in range(commands.shape[0]):
 
                 node = commands[i, 0]
                 if node == 0:
                     column_idx = commands[i, 1]
-                    tf_stack[i] = X[column_idx]
+                    ad_stack[i] = X[column_idx]
                 elif node == 1:
                     const_idx = commands[i, 1]
                     # IMPORTANT: We need to first create the constant using numpy
                     # and then convert to tensor to avoid a memory leak. This bypasses
                     # one of tensorflows caching mechanisms for constants which causes the leak.
-                    tf_stack[i] = tf.convert_to_tensor(
-                        np.ones_like(X[0]) * constants[const_idx])
+                    ad_stack[i] = torch.ones_like(
+                        X[0], dtype=torch.float32) * constants[const_idx]
                 elif node == 2:
                     t1_idx, t2_idx = commands[i, 1], commands[i, 2]
-                    tf_stack[i] = tf_stack[t1_idx] + tf_stack[t2_idx]
+                    ad_stack[i] = ad_stack[t1_idx] + ad_stack[t2_idx]
                 elif node == 3:
                     t1_idx, t2_idx = commands[i, 1], commands[i, 2]
-                    tf_stack[i] = tf_stack[t1_idx] - tf_stack[t2_idx]
+                    ad_stack[i] = ad_stack[t1_idx] - ad_stack[t2_idx]
                 elif node == 4:
                     t1_idx, t2_idx = commands[i, 1], commands[i, 2]
-                    tf_stack[i] = tf_stack[t1_idx] * tf_stack[t2_idx]
+                    ad_stack[i] = ad_stack[t1_idx] * ad_stack[t2_idx]
                 elif node == 5:
                     t1_idx, t2_idx = commands[i, 1], commands[i, 2]
-                    tf_stack[i] = tf_stack[t1_idx] / tf_stack[t2_idx]
+                    ad_stack[i] = ad_stack[t1_idx] / ad_stack[t2_idx]
                 elif node == 6:
                     t1_idx = commands[i, 1]
-                    tf_stack[i] = tf.sin(tf_stack[t1_idx])
+                    ad_stack[i] = torch.sin(ad_stack[t1_idx])
                 elif node == 7:
                     t1_idx = commands[i, 1]
-                    tf_stack[i] = tf.cos(tf_stack[t1_idx])
+                    ad_stack[i] = torch.cos(ad_stack[t1_idx])
                 elif node == 8:
                     t1_idx = commands[i, 1]
-                    tf_stack[i] = tf.exp(tf_stack[t1_idx])
+                    ad_stack[i] = torch.exp(ad_stack[t1_idx])
                 elif node == 9:
                     t1_idx = commands[i, 1]
-                    tf_stack[i] = tf.math.log(tf.abs(tf_stack[t1_idx]))
+                    ad_stack[i] = torch.log(tf.abs(ad_stack[t1_idx]))
                 elif node == 10:
                     t1_idx, t2_idx = commands[i, 1], commands[i, 2]
-                    tf_stack[i] = tf.math.pow(
-                        tf.abs(tf_stack[t1_idx]), tf_stack[t2_idx])
+                    ad_stack[i] = torch.pow(
+                        torch.abs(ad_stack[t1_idx]), ad_stack[t2_idx])
                 elif node == 11:
                     t1_idx = commands[i, 1]
-                    tf_stack[i] = tf.abs(tf_stack[t1_idx])
+                    ad_stack[i] = torch.abs(ad_stack[t1_idx])
                 elif node == 12:
                     t1_idx = commands[i, 1]
-                    tf_stack[i] = tf.sqrt(tf.abs(tf_stack[t1_idx]))
+                    ad_stack[i] = torch.sqrt(torch.abs(ad_stack[t1_idx]))
                 else:
                     raise IndexError(f"Node value {node} unrecognized")
 
-            return tf_stack[-1]
+            return ad_stack[-1]
 
         return evaluate
 
     def evaluate_fitness_vector(self, individual):
 
         self.eval_count += 1
-        tf_graph_function = self.build_tf_graph_from_agraph(individual)
-        U_hat = tf_graph_function(self.X)
-        error_fit = self.U[:, 0] - U_hat.numpy()
+        ad_graph_function = self.build_torch_graph_from_agraph(individual)
+        U_hat = ad_graph_function(self.X).detach().numpy()
+        error_fit = self.U[:, 0] - U_hat
 
         if self.X_df is not None:
-            # Use persistent gradients in the case that we need to take more than one derivative.
-            with tf.GradientTape(persistent=True) as g:
-                g.watch(self.X_df)
+            U_df = ad_graph_function(self.X_df)
 
-                U_df = tf_graph_function(self.X_df)
-
-                error_df = self.df_err(self.X_df, U_df, g)
-
-            # g is not cleaned up automatically if persistent=True
-            del g
-
-            # Make sure we do things off the tape
-            error_df = error_df.numpy()
+            error_df = self.df_err(self.X_df, U_df).detach().numpy()
 
             fitness = self._metric(error_fit) + \
                 self.differential_weight * self._metric(error_df)
 
             if self.detect_const_solutions and not np.isinf(fitness):
                 random_idx = np.random.choice(list(range(U_df.shape[0])), 6)
-                U_df_npy = U_df.numpy()
+                U_df_npy = U_df.detach().numpy()
 
                 vals = U_df_npy[random_idx]
 

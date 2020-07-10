@@ -1,5 +1,4 @@
 import numpy as np
-import tensorflow as tf
 
 import problems.poisson
 import problems.linear_advection
@@ -9,7 +8,6 @@ import problems.simple.linear as linear
 import problems.simple.trig as trig
 import problems.simple.exp as simple_exp
 import problems.simple.shm as shm
-tf.config.set_visible_devices([], 'GPU')
 
 
 def get_test(test_name, *args):

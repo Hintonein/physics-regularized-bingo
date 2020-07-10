@@ -1,19 +1,21 @@
 import numpy as np
-import tensorflow as tf
 from scipy.integrate import solve_ivp
+import torch
 
 
 def get_pdefn(omega):
 
-    def pdefn(X, U, g):
-        u_t = g.gradient(U, X[0])
-        g.__exit__(None, None, None)
-        if u_t is not None:
-            u_tt = g.gradient(u_t, X[0])
-            if u_tt is not None:
-                return u_tt + omega**2 * tf.sin(U)
+    def pdefn(X, U):
 
-        return tf.ones_like(U)*np.inf
+        if U.grad_fn is not None:
+
+            u_t = torch.autograd.grad(U, X[0], create_graph=True)[0]
+            if u_t is not None:
+                u_tt = torch.autograd.grad(u_t, X[0])[0]
+                if u_tt is not None:
+                    return u_tt + omega**2 * torch.sin(U)
+
+        return torch.ones_like(U) * np.inf
 
     return pdefn
 
@@ -48,7 +50,7 @@ def get_integral_solution(omega, t_start=0, t_end=2, n=128):
 
         return [dx_dt, dv_dt]
 
-    initial_conditions = np.array([-np.pi/2, 0])
+    initial_conditions = np.array([-np.pi / 2, 0])
 
     solution = solve_ivp(pendulum_system, (0, 2),
                          initial_conditions, max_step=0.001, dense_output=True)

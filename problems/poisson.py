@@ -1,6 +1,6 @@
 import numpy as np
-import tensorflow as tf
 import problems.data_generation_helpers as util
+import torch
 
 
 def analytic_solution(X, k):
@@ -9,22 +9,25 @@ def analytic_solution(X, k):
 
 def get_pdefn(k):
 
-    def pdefn(X, U, g):
-        u_x = g.gradient(U, X[0])
-        u_y = g.gradient(U, X[1])
-        # Manually exit so that these ops don't get added to the tape
-        # This results in a 10-25% speedup
-        g.__exit__(None, None, None)
-        if u_x is not None and u_y is not None:
+    def pdefn(X, U):
+        if U.grad_fn is not None:
 
-            u_xx = g.gradient(u_x, X[0])
-            u_yy = g.gradient(u_y, X[1])
+            u_x = torch.autograd.grad(
+                U.sum(), X[0], create_graph=True, allow_unused=True)[0]
+            u_y = torch.autograd.grad(
+                U.sum(), X[1], create_graph=True, allow_unused=True)[0]
+            if u_x is not None and u_y is not None:
 
-            if u_xx is not None and u_yy is not None:
+                u_xx = torch.autograd.grad(
+                    u_x.sum(), X[0], allow_unused=True)[0]
+                u_yy = torch.autograd.grad(
+                    u_y.sum(), X[1], allow_unused=True)[0]
 
-                return u_xx + u_yy + 2 * (k**2) * tf.sin(X[0]) * tf.sin(X[1])
+                if u_xx is not None and u_yy is not None:
 
-        return tf.ones_like(U) * np.inf
+                    return u_xx + u_yy + 2 * (k**2) * torch.sin(X[0]) * torch.sin(X[1])
+
+        return torch.ones_like(U) * np.inf
 
     return pdefn
 
