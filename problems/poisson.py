@@ -4,7 +4,7 @@ import problems.data_generation_helpers as util
 
 
 def analytic_solution(X, k):
-    return np.sin(k*X[:, 0]) * np.sin(k*X[:, 1])
+    return np.sin(k * X[:, 0]) * np.sin(k * X[:, 1])
 
 
 def get_pdefn(k):
@@ -22,7 +22,7 @@ def get_pdefn(k):
 
             if u_xx is not None and u_yy is not None:
 
-                return u_xx + u_yy + 2*(k**2)*tf.sin(X[0])*tf.sin(X[1])
+                return u_xx + u_yy + 2 * (k**2) * tf.sin(X[0]) * tf.sin(X[1])
 
         return tf.ones_like(U) * np.inf
 
