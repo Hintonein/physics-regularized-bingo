@@ -19,9 +19,9 @@ def get_pdefn(k):
             if u_x is not None and u_y is not None:
 
                 u_xx = torch.autograd.grad(
-                    u_x.sum(), X[0], allow_unused=True)[0]
+                    u_x.sum(), X[0], create_graph=True, allow_unused=True)[0]
                 u_yy = torch.autograd.grad(
-                    u_y.sum(), X[1], allow_unused=True)[0]
+                    u_y.sum(), X[1], create_graph=True, allow_unused=True)[0]
 
                 if u_xx is not None and u_yy is not None:
 
