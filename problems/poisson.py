@@ -18,10 +18,17 @@ def get_pdefn(k):
                 U.sum(), X[1], create_graph=True, allow_unused=True)[0]
             if u_x is not None and u_y is not None:
 
-                u_xx = torch.autograd.grad(
-                    u_x.sum(), X[0], create_graph=True, allow_unused=True)[0]
-                u_yy = torch.autograd.grad(
-                    u_y.sum(), X[1], create_graph=True, allow_unused=True)[0]
+                if u_x.grad_fn is not None:
+                    u_xx = torch.autograd.grad(
+                        u_x.sum(), X[0], create_graph=True, allow_unused=True)[0]
+                else:
+                    u_xx = torch.zeros_like(U)
+
+                if u_y.grad_fn is not None:
+                    u_yy = torch.autograd.grad(
+                        u_y.sum(), X[1], create_graph=True, allow_unused=True)[0]
+                else:
+                    u_yy = torch.zeros_like(U)
 
                 if u_xx is not None and u_yy is not None:
 
