@@ -6,7 +6,7 @@
     "hyperparams": {
       "pop_size": 512,
       "stack_size": 32,
-      "max_generations": 700,
+      "max_generations": 2048,
       "fitness_threshold": 1e-6,
       "stagnation_threshold": 512,
       "differential_weight": 1.0,
@@ -27,7 +27,7 @@
     "hyperparams": {
       "pop_size": 512,
       "stack_size": 32,
-      "max_generations": 700,
+      "max_generations": 2048,
       "fitness_threshold": 1e-6,
       "stagnation_threshold": 512,
       "differential_weight": 1.0,
@@ -48,7 +48,7 @@
     "hyperparams": {
       "pop_size": 512,
       "stack_size": 32,
-      "max_generations": 700,
+      "max_generations": 2048,
       "fitness_threshold": 1e-6,
       "stagnation_threshold": 512,
       "differential_weight": 1.0,
@@ -69,7 +69,7 @@
     "hyperparams": {
       "pop_size": 512,
       "stack_size": 32,
-      "max_generations": 700,
+      "max_generations": 2048,
       "fitness_threshold": 1e-6,
       "stagnation_threshold": 512,
       "differential_weight": 1.0,
@@ -90,7 +90,7 @@
     "hyperparams": {
       "pop_size": 512,
       "stack_size": 32,
-      "max_generations": 500,
+      "max_generations": 2048,
       "fitness_threshold": 1e-6,
       "stagnation_threshold": 100,
       "differential_weight": 1.0,
