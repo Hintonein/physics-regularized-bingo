@@ -1,0 +1,21 @@
+{
+  "problem": "poisson",
+  "operators": ["+", "-", "*", "sin", "cos"],
+  "problem_args": [3.141592653589793],
+  "hyperparams": {
+    "pop_size": 256,
+    "stack_size": 64,
+    "max_generations": 10000,
+    "fitness_threshold": 1e-6,
+    "stagnation_threshold": 1024,
+    "differential_weight": 1.0,
+    "check_frequency": 1,
+    "min_generations": 1,
+    "crossover_rate": 0.4,
+    "mutation_rate": 0.4,
+    "evolution_algorithm": "DeterministicCrowding"
+  },
+  "result_file": "results/poisson_big.json",
+  "log_file": "logs/poisson_big",
+  "checkpoint_file": "checkpoints/poisson_big"
+}
