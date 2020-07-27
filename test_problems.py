@@ -109,6 +109,15 @@ def test_pendulum(omega):
     return X, U, X_df, pdefn, 2
 
 
+def test_pendulum_dense(omega):
+
+    X, U = problems.full_pendulum.get_test_data(omega)
+
+    pdefn = problems.full_pendulum.get_pdefn(omega)
+
+    return X, U, X, pdefn, 2
+
+
 def test_poisson(k):
     '''Poission equation with solutions sin(kx)*sin(ky)'''
 
@@ -116,6 +125,20 @@ def test_poisson(k):
     pdefn = problems.poisson.get_pdefn(k)
 
     return X, U, X_df, pdefn, 2
+
+
+def test_poisson_dense(k):
+
+    X, U = problems.poisson.gen_testing_data(k, n=256)
+
+    idx = np.random.choice(range(X.shape[0]), 1000)
+
+    X_train = X[idx, :]
+    U_train = U[idx, :]
+
+    pdefn = problems.poisson.get_pdefn(k)
+
+    return X_train, U_train, X_train, pdefn, 2
 
 
 dispatch = {
@@ -128,5 +151,7 @@ dispatch = {
     "burgers_dense": test_burgers_dense,
     "burgers_slice": test_burgers_slice,
     "pendulum": test_pendulum,
+    "pendulum_dense": test_pendulum_dense,
     "poisson": test_poisson,
+    "poisson_dense": test_poisson_dense,
 }

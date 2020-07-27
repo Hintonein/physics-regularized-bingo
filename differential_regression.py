@@ -20,12 +20,16 @@ class DifferentialRegression_TF(VectorBasedFunction):
                   for i in range(X.shape[1])]
 
         self.U = U  # Keep as a numpy array
-        self.X_df = [
-            torch.tensor(X_df[:, i], dtype=torch.float32)
-            for i in range(X_df.shape[1])
-        ]
-        for X in self.X_df:
-            X.requires_grad = True
+
+        if X_df is not None:
+            self.X_df = [
+                torch.tensor(X_df[:, i], dtype=torch.float32)
+                for i in range(X_df.shape[1])
+            ]
+            for X in self.X_df:
+                X.requires_grad = True
+        else:
+            self.X_df = None
 
         self.differential_weight = differential_weight
         self.detect_const_solutions = detect_const_solutions

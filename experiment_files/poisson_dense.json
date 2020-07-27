@@ -1,0 +1,46 @@
+[
+  {
+    "problem": "poisson_dense",
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "problem_args": [3.141592653589793],
+    "use_df": true,
+    "hyperparams": {
+      "pop_size": 512,
+      "stack_size": 16,
+      "max_generations": 1024,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 512,
+      "differential_weight": 1.0,
+      "check_frequency": 1,
+      "min_generations": 1,
+      "crossover_rate": 0.4,
+      "mutation_rate": 0.4,
+      "evolution_algorithm": "DeterministicCrowding"
+    },
+    "result_file": "results/poisson_dense_df.json",
+    "log_file": "logs/poisson_dense_df",
+    "checkpoint_file": "checkpoints/poisson_dense_df"
+  },
+  {
+    "problem": "poisson_dense",
+    "operators": ["+", "-", "*", "sin", "cos"],
+    "problem_args": [3.141592653589793],
+    "use_df": false,
+    "hyperparams": {
+      "pop_size": 512,
+      "stack_size": 16,
+      "max_generations": 1024,
+      "fitness_threshold": 1e-6,
+      "stagnation_threshold": 512,
+      "differential_weight": 1.0,
+      "check_frequency": 1,
+      "min_generations": 1,
+      "crossover_rate": 0.4,
+      "mutation_rate": 0.4,
+      "evolution_algorithm": "DeterministicCrowding"
+    },
+    "result_file": "results/poisson_dense_nodf.json",
+    "log_file": "logs/poisson_dense_nodf",
+    "checkpoint_file": "checkpoints/poisson_dense_nodf"
+  }
+]

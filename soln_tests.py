@@ -36,7 +36,7 @@ def agraph_similarity(ag_1, ag_2):
     return ag_1.fitness == ag_2.fitness and ag_1.get_complexity() == ag_2.get_complexity()
 
 
-def create_evolutionary_optimizer(test_name, operators, hyperparams, checkpoint_file, *args):
+def create_evolutionary_optimizer(test_name, operators, hyperparams, checkpoint_file, use_df, *args):
 
     pop_size = hyperparams["pop_size"]
     stack_size = hyperparams["stack_size"]
@@ -49,6 +49,10 @@ def create_evolutionary_optimizer(test_name, operators, hyperparams, checkpoint_
 
     # rank 0 generates the data to be fitted
     X, U, X_df, error_df_fn, df_order = get_test(test_name, *args)
+
+    # If we want to fall back to regular regression without changing the interface
+    if not use_df:
+        X_df = None
 
     # tell bingo which mathematical building blocks may be used
     component_generator = ComponentGenerator(X.shape[1])
@@ -101,8 +105,13 @@ def main(experiment_params, checkpoint=None):
         operators = experiment_params["operators"]
         problem_args = experiment_params["problem_args"]
 
+        if "use_df" in experiment_params:
+            use_df = experiment_params["use_df"]
+        else:
+            use_df = True
+
         optimizer = create_evolutionary_optimizer(
-            problem, operators, hyperparams, checkpoint_file, *problem_args)
+            problem, operators, hyperparams, checkpoint_file, use_df, *problem_args)
 
     else:
         optimizer = checkpoint

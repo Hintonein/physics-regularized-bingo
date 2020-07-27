@@ -9,9 +9,10 @@ def get_pdefn(omega):
 
         if U.grad_fn is not None:
 
-            u_t = torch.autograd.grad(U, X[0], create_graph=True)[0]
-            if u_t is not None:
-                u_tt = torch.autograd.grad(u_t, X[0])[0]
+            u_t = torch.autograd.grad(U.sum(), X[0], create_graph=True)[0]
+            if u_t is not None and u_t.grad_fn is not None:
+                u_tt = torch.autograd.grad(
+                    u_t.sum(), X[0], create_graph=True)[0]
                 if u_tt is not None:
                     return u_tt + omega**2 * torch.sin(U)
 
