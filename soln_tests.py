@@ -1,6 +1,3 @@
-# Ignoring some linting rules in tests
-# pylint: disable=redefined-outer-name
-# pylint: disable=missing-docstring
 import time
 import numpy as np
 import math as m
@@ -17,7 +14,6 @@ from bingo.symbolic_regression.agraph.mutation import AGraphMutation
 from bingo.symbolic_regression.agraph.generator import AGraphGenerator
 from bingo.symbolic_regression.agraph.component_generator import ComponentGenerator
 
-# define custom fitness
 from differential_regression import DifferentialRegression_TF
 
 from bingo.evolutionary_algorithms.deterministic_crowding import DeterministicCrowdingEA
@@ -25,7 +21,9 @@ from bingo.evolutionary_algorithms.age_fitness import AgeFitnessEA
 from bingo.evolutionary_optimizers.parallel_archipelago import ParallelArchipelago
 from bingo.evaluation.evaluation import Evaluation
 from bingo.evolutionary_optimizers.island import Island
-from bingo.local_optimizers.continuous_local_opt import ContinuousLocalOptimization
+from bingo.local_optimizers.scipy_optimizer import ScipyOptimizer
+from bingo.local_optimizers.local_opt_fitness import LocalOptFitnessFunction
+
 from bingo.stats.pareto_front import ParetoFront
 
 from bingo.evolutionary_optimizers.evolutionary_optimizer import load_evolutionary_optimizer_from_file
@@ -44,35 +42,36 @@ def create_evolutionary_optimizer(test_name, operators, hyperparams, checkpoint_
     crossover_rate = hyperparams["crossover_rate"]
     mutation_rate = hyperparams["mutation_rate"]
     evolution_algorithm = hyperparams["evolution_algorithm"]
-
+    clo_type = hyperparams["clo_type"]
+    neumann_bc = hyperparams['neumann_bc']
+    
     rank = MPI.COMM_WORLD.Get_rank()
 
-    # rank 0 generates the data to be fitted
     X, U, X_df, error_df_fn, df_order = get_test(test_name, *args)
-
-    # If we want to fall back to regular regression without changing the interface
+    
     if not use_df:
         X_df = None
 
-    # tell bingo which mathematical building blocks may be used
     component_generator = ComponentGenerator(X.shape[1])
     for opp in operators:
         component_generator.add_operator(opp)
 
-    crossover = AGraphCrossover(component_generator)
+    crossover = AGraphCrossover()
     mutation = AGraphMutation(component_generator)
-    agraph_generator = AGraphGenerator(stack_size, component_generator)
+    agraph_generator = AGraphGenerator(stack_size, component_generator, use_python = True)
 
-    # tell bingo how fitness is defined
     fitness = DifferentialRegression_TF(
-        X, U, X_df, error_df_fn, df_order,
-        metric="rmse", differential_weight=differential_weight)
-
-    # tell bingo how to calibrate any coefficients
-    local_opt_fitness = ContinuousLocalOptimization(
-        fitness, algorithm='Nelder-Mead')
+        X, U, X_df, error_df_fn, df_order,neumann_bc,
+        metric="mae", clo_type = clo_type, differential_weight=differential_weight)
+    
+    
+    optimizer = ScipyOptimizer(fitness, method='lm',
+                               param_init_bounds=[-5, 5])
+    
+    local_opt_fitness = LocalOptFitnessFunction(fitness, optimizer)
+    
     evaluator = Evaluation(local_opt_fitness)
-
+    
     if evolution_algorithm == "DeterministicCrowding":
         ea = DeterministicCrowdingEA(
             evaluator, crossover, mutation, crossover_rate, mutation_rate)
@@ -122,8 +121,8 @@ def main(experiment_params, checkpoint=None):
     stagnation_threshold = hyperparams["stagnation_threshold"]
     check_frequency = hyperparams["check_frequency"]
 
-    print("Starting evolution...")
-    # go do the evolution and send back the best equations
+    print("Starting Evolution at CPU-{}!!".format(rank))
+   
     optim_result = optimizer.evolve_until_convergence(max_generations, fitness_threshold,
                                                       convergence_check_frequency=check_frequency, min_generations=min_generations,
                                                       stagnation_generations=stagnation_threshold, checkpoint_base_name=checkpoint_file, num_checkpoints=2)
@@ -160,7 +159,7 @@ if __name__ == '__main__':
     if type(setup_json) is list:
         if args.experiment_idx is None:
             for setup in setup_json:
-                main(setup)  # TODO: Deal with checkpointing in the list case
+                main(setup)
         else:
             main(setup_json[args.experiment_idx], checkpoint)
     else:

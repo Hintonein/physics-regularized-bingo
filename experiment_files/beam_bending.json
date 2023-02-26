@@ -1,0 +1,23 @@
+{
+  "problem": "beam_bending",
+  "operators": ["+", "-", "*", "/"],
+  "problem_args": [5.0e-5, 0.0, 10.0, 2, 4],
+  "hyperparams": {
+    "pop_size": 150,
+    "stack_size": 21,
+    "max_generations": 100,
+    "fitness_threshold": 1e-18,
+    "stagnation_threshold": 100,
+    "differential_weight": 1,
+    "check_frequency": 1,
+    "min_generations": 1,
+    "crossover_rate": 0.6,
+    "mutation_rate": 0.4,
+    "evolution_algorithm": "AgeFitness",
+    "clo_type":"root",
+    "neumann_bc":1
+  },
+  "result_file": "results/beam_bending.json",
+  "log_file": "logs/beam_bending",
+  "checkpoint_file": "checkpoints/beam_bending"
+}

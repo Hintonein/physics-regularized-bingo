@@ -2,6 +2,7 @@ import numpy as np
 
 import problems.poisson
 import problems.linear_advection
+import problems.beam_bending
 import problems.burgers
 import problems.full_pendulum
 import problems.simple.linear as linear
@@ -118,10 +119,11 @@ def test_pendulum_dense(omega):
     return X, U, X, pdefn, 2
 
 
-def test_poisson(k):
+def test_poisson(k, n_b, n_df):
     '''Poission equation with solutions sin(kx)*sin(ky)'''
 
-    X, U, X_df = problems.poisson.gen_training_data(k)
+    X, U, X_df = problems.poisson.gen_training_data(k, n_b=n_b, n_df=n_df)
+    
     pdefn = problems.poisson.get_pdefn(k)
 
     return X, U, X_df, pdefn, 2
@@ -140,6 +142,14 @@ def test_poisson_dense(k):
 
     return X_train, U_train, X_train, pdefn, 2
 
+def test_beam_bending(k, xo, xe, n_b, n_df):
+    '''Beam bending equations with distributed load
+       where k = q/(E*I) = constant'''
+
+    X, U, X_df = problems.beam_bending.gen_training_data(k, xo, xe, n_b=n_b, n_df=n_df)
+    pdefn = problems.beam_bending.get_pdefn(k)
+
+    return X, U, X_df, pdefn, 4
 
 dispatch = {
     "linear": test_linear,
@@ -154,4 +164,5 @@ dispatch = {
     "pendulum_dense": test_pendulum_dense,
     "poisson": test_poisson,
     "poisson_dense": test_poisson_dense,
+    "beam_bending" : test_beam_bending
 }
