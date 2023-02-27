@@ -13,10 +13,10 @@
 
 ## Authors
 - <b>Hongsup Oh</b>, Department of Mechanical Engineering, University of Utah
-- <b>Roman Amici</b>, Scientific Computing and Imaging Institute, Scientific Computing and Imaging Institute, University of Utah
+- <b>Roman Amici</b>, Scientific Computing and Imaging Institute, School of Computing, University of Utah
 - <b>Geoffrey Bomarito</b>, NASA Langley Research Center
-- <b>Shandian Zhe</b>, Scientific Computing and Imaging Institute, University of Utah
-- <b>Robert M. Kirby</b>, Scientific Computing and Imaging Institute, Scientific Computing and Imaging Institute,University of Utah
+- <b>Shandian Zhe</b>, School of Computing, University of Utah
+- <b>Robert M. Kirby</b>, Scientific Computing and Imaging Institute, School of Computing, University of Utah
 - <b>Jacob D. Hochhalter</b>, Department of Mechanical Engineering, University of Utah
 
 ## Introduction

@@ -12,5 +12,5 @@ def OpenPKL(file):
         print('Fitness = {}\n'.format(hof.fitness))
 
 if __name__=="__main__":
-    file = '/mnt/c/Users/hongs/Downloads/bingo_diffeq_pt/checkpoints/beam_bending_3.pkl'
+    file = '/mnt/c/Users/hongs/Downloads/bingo_diffeq_pt/checkpoints/beam_bending_2.pkl'
     OpenPKL(file)
