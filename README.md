@@ -31,7 +31,7 @@ pip install bingo-nasa
 ## Install PR-Bingo
 `RP-Bingo` is simply installed by `git clone`, after installing `Bingo`.
 ```
-git clone https://github.com/jhochhal/bingo_diffeq_pt
+git clone https://github.com/HongsupOH/physics-regularized-bingo
 ```
 ## Tutorials
 Two numerical experiments based on boundary-value
