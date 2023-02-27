@@ -8,7 +8,7 @@
 * [Tutorials](#Tutorials)
 * [Implement code with MPI](#Implement-code-with-MPI)
    * [Beam bending problem](#Beam-bending-problem)
-   * [Poisson's equation](#Poisson's-equationm)
+   * [Poisson's equation](#Poisson's-equation)
 * [Contact](#Contact)
 
 ## Authors
