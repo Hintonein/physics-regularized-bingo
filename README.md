@@ -1,6 +1,4 @@
 # Physics Regularized Bingo (PR-Bingo)
-* Beam bending problem in [Tutorials](#Tutorials): [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HongsupOH/physics-regularized-bingo/master?filepath=Tutorial_Beambending.ipynb)
-* Poisson's equation in [Tutorials](#Tutorials): [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HongsupOH/physics-regularized-bingo/master?filepath=Tutorial_Poisson.ipynb)
 ## Table of contents
     
 * [Authors](#Authors)

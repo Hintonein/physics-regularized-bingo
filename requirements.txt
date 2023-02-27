@@ -1,5 +1,0 @@
-numpy
-matplotlib
-mpi4py
-bingo-nasa
-pytorch
