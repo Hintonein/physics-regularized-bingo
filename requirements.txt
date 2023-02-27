@@ -1,5 +1,5 @@
 numpy
 matplotlib
-conda install -c conda-forge mpi4py openmpi
+mpi4py openmpi
 bingo-nasa
 pytorch
