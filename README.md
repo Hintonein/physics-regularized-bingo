@@ -7,8 +7,8 @@
 * [Install PR-Bingo](#Install-PR-Bingo)
 * [Tutorials](#Tutorials)
 * [Implement code with MPI](#Implement-code-with-MPI)
-   * [Beam bending problem](Beam-bending-problem)
-   * [Poisson's equation](Poisson's-equationm)
+   * [Beam bending problem](#Beam-bending-problem)
+   * [Poisson's equation](#Poisson's-equationm)
 * [Contact](#Contact)
 
 ## Authors
