@@ -1,4 +1,5 @@
 # Physics Regularized Bingo (PR-Bingo)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HongsupOH/physics-regularized-bingo/blob/master/Tutorial_Beambending.ipynb)
 ## Table of contents
     
 * [Authors](#Authors)
