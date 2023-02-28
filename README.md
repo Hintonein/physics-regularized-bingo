@@ -12,12 +12,12 @@
 * [Contact](#Contact)
 
 ## Authors
-- <b>[Hongsup Oh](https://www.linkedin.com/in/hongsupoh/)</b>, Department of Mechanical Engineering, University of Utah
-- <b>Roman Amici</b>, Scientific Computing and Imaging Institute, School of Computing, University of Utah
-- <b>Geoffrey Bomarito</b>, NASA Langley Research Center
-- <b>Shandian Zhe</b>, School of Computing, University of Utah
-- <b>Robert M. Kirby</b>, Scientific Computing and Imaging Institute, School of Computing, University of Utah
-- <b>Jacob D. Hochhalter</b>, Department of Mechanical Engineering, University of Utah
+- <b>[Hongsup Oh](https://github.com/HongsupOH)</b>, Department of Mechanical Engineering, University of Utah
+- <b>[Roman Amici](https://github.com/roman-amici)</b>, Scientific Computing and Imaging Institute, School of Computing, University of Utah
+- <b>[Geoffrey Bomarito](https://github.com/gbomarito)</b>, NASA Langley Research Center
+- <b>[Shandian Zhe](https://users.cs.utah.edu/~zhe/)</b>, School of Computing, University of Utah
+- <b>[Robert M. Kirby](https://users.cs.utah.edu/~kirby/)</b>, Scientific Computing and Imaging Institute, School of Computing, University of Utah
+- <b>[Jacob D. Hochhalter](https://www.mech.utah.edu/directory/faculty/jacob-hochhalter/)</b>, Department of Mechanical Engineering, University of Utah
 
 ## Introduction
 PR-GPSR is a interpretable machine learning package for the discovery of analytic solutions to differential equations. If you want to understand the theory of physic regularized technique with GPSR, you can read our [paper](https://arxiv.org/abs/2302.03175).
