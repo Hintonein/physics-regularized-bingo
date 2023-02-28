@@ -39,18 +39,13 @@ def get_pdefn(k, relative=True):
                         pass
                     elif order==2:
                         if bc==True:
-                            
-                            #combined[0]  = u_x[order][0]
-                            #combined[-1] = u_x[order][-1]
                             combined = u_x[order]
-                            
                             return [combined]
                         else:
                             pass
                     elif order==3:
                         pass
                     elif order==4:
-                        #combined[1:-1] = u_x[order][1:-1] - k
                         combined = u_x[order] - k
                         if relative == True:
                             return [combined/k,]
@@ -64,8 +59,6 @@ def get_pdefn(k, relative=True):
 
 def gen_training_data(k, low, high, n_b=2, n_df=4):
     
-    #X_bc = np.linspace(low, high, n_b)[:, None]
-    #X_df = np.linspace(low, high, n_df)[:, None]
     n = 30
     X_domain = np.linspace(low,high,n)
     X_bc = np.random.choice([X_domain[0],X_domain[-1]],n_b,replace=False)[:, None]
