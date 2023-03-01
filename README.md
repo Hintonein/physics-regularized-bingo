@@ -23,9 +23,14 @@
 PR-GPSR is a interpretable machine learning package for the discovery of analytic solutions to differential equations. If you want to understand the theory of physic regularized technique with GPSR, you can read our [paper](https://arxiv.org/abs/2302.03175).
 
 ## Install Bingo
-To install `Bingo`, simply use `pip` or `pip3`. Detail discriptions of installation are [Here](https://nightdr.github.io/bingo/installation.html).
+To install [Bingo](https://github.com/nasa/bingo), simply use `pip` or `pip3`. Detail discriptions of installation are [Here](https://nightdr.github.io/bingo/installation.html).
 ```
 pip install bingo-nasa
+```
+
+You need to have `mpi` to properly install `mpi4py`. It can be installed by  
+```
+sudo apt install mpich 
 ```
 
 ## Install PR-Bingo
