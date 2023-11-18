@@ -20,10 +20,11 @@
 - <b>[Jacob D. Hochhalter](https://www.mech.utah.edu/directory/faculty/jacob-hochhalter/)</b>, Department of Mechanical Engineering, University of Utah
 
 ## Introduction
-PR-GPSR is a interpretable machine learning package for the discovery of analytic solutions to differential equations. If you want to understand the theory of physic regularized technique with GPSR, you can read our [paper](https://arxiv.org/abs/2302.03175).
+PR-GPSR is an interpretable machine learning package for the discovery of analytic solutions to differential equations. 
+our paper is available for reading in [the Engineering with Computers](https://link.springer.com/article/10.1007/s00366-023-01915-7) journal or on [arxiv](https://arxiv.org/abs/2302.03175).
 
 ## Install Bingo
-To install [Bingo](https://github.com/nasa/bingo), simply use `pip` or `pip3`. Detail discriptions of installation are [Here](https://nightdr.github.io/bingo/installation.html).
+To install [Bingo](https://github.com/nasa/bingo), simply use `pip` or `pip3`. Detail descriptions of installation are [Here](https://nightdr.github.io/bingo/installation.html).
 ```
 pip install bingo-nasa
 ```
